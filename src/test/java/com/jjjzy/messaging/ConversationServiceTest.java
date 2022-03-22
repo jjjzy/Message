@@ -157,16 +157,35 @@ public class ConversationServiceTest {
         this.conversationService.removeConversation(1);
     }
 
-//    @Test
-//    public void testRemoveUserFromConversation_inviteNullUser_throwsMessageServiceException() throws Exception{
-//        List<Integer> temp = new ArrayList<Integer>();
-//        temp.add(2);
-//        temp.add(3);
-//
-//        MessageServiceException messageServiceException = assertThrows(
-//                MessageServiceException.class,
-//                () -> this.conversationService.removeUserFromConversation(1, temp));
-//
-//        assertEquals(messageServiceException.getMessage(), "User not exists.");
-//    }
+    @Test
+    public void testRemoveConversation_conversationNotFound_throwsMessageServiceException() throws Exception{
+        MessageServiceException messageServiceException = assertThrows(
+                MessageServiceException.class,
+                () -> this.conversationService.removeConversation(1));
+
+        assertEquals(messageServiceException.getMessage(), "User not exists.");
+    }
+
+    @Test
+    public void testGetAllConversations_happyCase(){
+        List<Conversation> temp = new ArrayList<Conversation>();
+
+        Conversation tempConversation = new Conversation();
+        tempConversation.setId(1);
+
+        temp.add(tempConversation);
+
+        List<Integer> temp1 = new ArrayList<Integer>();
+        temp1.add(1);
+        temp1.add(2);
+
+
+        when(this.conversationUsersDAO.getConversationIdById(1)).thenReturn(temp1);
+
+
+        when(this.conversationDAO.getConversationById(1)).thenReturn(new Conversation());
+        when(this.conversationDAO.getConversationById(2)).thenReturn(new Conversation());
+
+        this.conversationService.getAllConversations(1);
+    }
 }

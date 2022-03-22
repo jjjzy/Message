@@ -50,10 +50,7 @@ public class ConversationController {
             throw new MessageServiceException(Status.USER_NOT_EXISTS);
         }
 
-        int id = user.getId();
-        this.conversationService.getConversationIdById(user.getId());
-
-        return new GetAllConversationsResponse(Status.OK, this.conversationService.getConversationById(this.conversationService.getConversationIdById(user.getId())));
+        return new GetAllConversationsResponse(Status.OK, this.conversationService.getAllConversations(user.getId()));
     }
 
     @PostMapping("/update")

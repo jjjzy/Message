@@ -64,19 +64,28 @@ public class ConversationService {
 
     }
 
-    public List<Integer> getConversationIdById(int id) {
-        return this.conversationUsersDAO.getConversationIdById(id);
-    }
-
-    public List<Conversation> getConversationById(List<Integer> conversationIds){
+    public List<Conversation> getAllConversations(int userId){
         List<Conversation> conversations = new ArrayList<Conversation>();
-        for(int i : conversationIds){
-//            for(Conversation j : this.conversationDAO.getConversationById(i))
+        for(int i : this.conversationUsersDAO.getConversationIdById(userId)){
             conversations.add(this.conversationDAO.getConversationById(i));
         }
 
         return conversations;
     }
+//
+//    public List<Integer> getConversationIdById(int id) {
+//        return this.conversationUsersDAO.getConversationIdById(id);
+//    }
+//
+//    public List<Conversation> getConversationById(List<Integer> conversationIds){
+//        List<Conversation> conversations = new ArrayList<Conversation>();
+//        for(int i : conversationIds){
+////            for(Conversation j : this.conversationDAO.getConversationById(i))
+//            conversations.add(this.conversationDAO.getConversationById(i));
+//        }
+//
+//        return conversations;
+//    }
 
     public void removeUserFromConversation(int conversationId, List<Integer> userIds) throws MessageServiceException{
         for(int i : userIds){
