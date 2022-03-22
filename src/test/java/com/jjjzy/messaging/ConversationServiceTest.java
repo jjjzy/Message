@@ -78,7 +78,95 @@ public class ConversationServiceTest {
                         temp
                 ));
                 assertEquals("User not exists.", messageServiceException.getMessage());
-
-
     }
+
+    @Test
+    public void testUpdateConversation_happyCase(){
+        this.conversationService.updateConversation(1, "123", "123");
+    }
+
+    @Test
+    public void testInviteUserToConversation_happyCase() throws Exception{
+        List<Integer> temp = new ArrayList<Integer>();
+        temp.add(2);
+        temp.add(3);
+
+        User tempUser = new User();
+        tempUser.setId(2);
+        when(userDAO.findUserByUserId(2)).thenReturn(tempUser);
+
+        User tempUser2 = new User();
+        tempUser.setId(3);
+        when(userDAO.findUserByUserId(3)).thenReturn(tempUser2);
+
+
+        this.conversationService.inviteUserToConversation(1, temp);
+    }
+
+    @Test
+    public void testInviteUserToConversation_inviteNullUser_throwsMessageServiceException() throws Exception{
+        List<Integer> temp = new ArrayList<Integer>();
+        temp.add(2);
+        temp.add(3);
+
+        MessageServiceException messageServiceException = assertThrows(
+                MessageServiceException.class,
+                () -> this.conversationService.inviteUserToConversation(1, temp));
+
+        assertEquals(messageServiceException.getMessage(), "User not exists.");
+    }
+
+    @Test
+    public void testRemoveUserFromConversation_happyCase() throws Exception{
+        List<Integer> temp = new ArrayList<Integer>();
+        temp.add(2);
+        temp.add(3);
+
+        User tempUser = new User();
+        tempUser.setId(2);
+        when(userDAO.findUserByUserId(2)).thenReturn(tempUser);
+
+        User tempUser2 = new User();
+        tempUser.setId(3);
+        when(userDAO.findUserByUserId(3)).thenReturn(tempUser2);
+
+        this.conversationService.removeUserFromConversation(1, temp);
+    }
+
+    @Test
+    public void testRemoveUserFromConversation_inviteNullUser_throwsMessageServiceException() throws Exception{
+        List<Integer> temp = new ArrayList<Integer>();
+        temp.add(2);
+        temp.add(3);
+
+        MessageServiceException messageServiceException = assertThrows(
+                MessageServiceException.class,
+                () -> this.conversationService.removeUserFromConversation(1, temp));
+
+        assertEquals(messageServiceException.getMessage(), "User not exists.");
+    }
+
+
+    @Test
+    public void testRemoveConversation_happyCase() throws Exception{
+        Conversation tempConversation = new Conversation();
+        tempConversation.setId(1);
+
+        when(this.conversationDAO.getConversationById(1)).thenReturn(tempConversation);
+
+        this.conversationService.removeConversation(1);
+    }
+
+//    @Test
+//    public void testRemoveUserFromConversation_inviteNullUser_throwsMessageServiceException() throws Exception{
+//        List<Integer> temp = new ArrayList<Integer>();
+//        temp.add(2);
+//        temp.add(3);
+//
+//        MessageServiceException messageServiceException = assertThrows(
+//                MessageServiceException.class,
+//                () -> this.conversationService.removeUserFromConversation(1, temp));
+//
+//        assertEquals(messageServiceException.getMessage(), "User not exists.");
+//    }
 }
