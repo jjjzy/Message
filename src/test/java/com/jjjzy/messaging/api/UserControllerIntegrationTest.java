@@ -42,8 +42,8 @@ public class UserControllerIntegrationTest {
 
     @AfterAll
     public void cleanUp(){
-//        testUserDAO.deleteAllUsers();
-//        testUserDAO.deleteAllUserValidationCode();
+        testUserDAO.deleteAllUsers();
+        testUserDAO.deleteAllUserValidationCode();
     }
 
     @Test
