@@ -17,4 +17,4 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Run tests with Maven
-        run: mvn -B -Dtest='!com.ray.message.api.*Test' test
+        run: mvn -B -Dtest='!com.jjjzy.messaging.api.*UserControllerIntegrationTest' test
