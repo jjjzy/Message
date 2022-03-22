@@ -32,9 +32,7 @@ public class UserController {
 
                     Status.PASSWORDS_NOT_MATCH);
         }
-//        System.out.println(registerUserRequest.getAddress());
-//        System.out.println(registerUserRequest.getPassword());
-//        System.out.println(registerUserRequest.getRepeatPassword());
+
         this.userService.registerUser(registerUserRequest.getUsername(),
                 registerUserRequest.getPassword(),
                 registerUserRequest.getEmail(),
