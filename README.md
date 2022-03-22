@@ -1,1 +1,3 @@
-| __JaCoCo Test Coverage__ | [![coverage](https://raw.githubusercontent.com/jjjzy/messaging/master/.github/badges/jacoco.svg)](https://github.com/jjjzy/Messaging/actions/workflows/build.yml) [![branches coverage](https://raw.githubusercontent.com/jjjzy/Messaging/master/.github/badges/branches.svg)](https://github.com/jjjzy/Messaging/actions/workflows/build.yml)  |
+| __JaCoCo Test Coverage__ | 
+[![coverage](https://raw.githubusercontent.com/jjjzy/Message/master/.github/badges/jacoco.svg)](https://github.com/jjjzy/Message/actions/workflows/build.yml) 
+[![branches coverage](https://raw.githubusercontent.com/pfctgeorge/Message/master/.github/badges/branches.svg)](https://github.com/jjjzy/Message/actions/workflows/build.yml)  |
