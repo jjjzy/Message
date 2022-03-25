@@ -15,7 +15,7 @@ import java.util.List;
 public interface ConversationDAO {
     @Insert(value = "INSERT INTO `conversations` (title, notice, create_time) VALUES (#{title}, #{notice}, #{createTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    int createConversation(@Param("conversation") Conversation conversation);
+    int createConversation(Conversation conversation);
 
     @Update("UPDATE `conversations` SET title = #{title}, notice = #{notice} WHERE id = #{conversationId}")
     void updateConversation(@Param("conversation_id") int conversationId, @Param("title") String title, @Param("notice") String notice);
@@ -37,10 +37,14 @@ public interface ConversationDAO {
 //        ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4
 
 
-//    CREATE TABLE `converstations` (
+//    CREATE TABLE `messages` (
 //        `id` int NOT NULL AUTO_INCREMENT,
-//        `title` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-//        `notice` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-//        `create_time` datetime DEFAULT NULL,
+//        `from_user_id` int NOT NULL,
+//        `to_user_id` int DEFAULT NULL,
+//        `to_conversation_id` int DEFAULT NULL,
+//        `message_type` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+//        `content` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+//        `send_time` datetime DEFAULT NULL,
+//        `message_status` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
 //        PRIMARY KEY (`id`)
 //        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

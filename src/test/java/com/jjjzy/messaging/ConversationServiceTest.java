@@ -163,7 +163,7 @@ public class ConversationServiceTest {
                 MessageServiceException.class,
                 () -> this.conversationService.removeConversation(1));
 
-        assertEquals(messageServiceException.getMessage(), "User not exists.");
+        assertEquals(messageServiceException.getMessage(), "The conversation doesn't exist.");
     }
 
     @Test

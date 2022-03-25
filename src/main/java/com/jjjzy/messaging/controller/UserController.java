@@ -1,4 +1,4 @@
-package com.jjjzy.messaging.Controllers;
+package com.jjjzy.messaging.controller;
 
 import com.jjjzy.messaging.Enums.Status;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
@@ -11,7 +11,6 @@ import com.jjjzy.messaging.Response.RegisterUserResponse;
 import com.jjjzy.messaging.Response.UserLoginResponse;
 import com.jjjzy.messaging.Response.UserLogoutResponse;
 import com.jjjzy.messaging.service.UserService;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,4 +69,4 @@ public class UserController {
 }
 //./mvnw spring-boot:run
 //messaging_password_2022
-//  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
+//

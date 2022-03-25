@@ -102,7 +102,7 @@ public class ConversationService {
     public void removeConversation(int conversationId) throws MessageServiceException{
         Conversation conversation = this.conversationDAO.getConversationById(conversationId);
         if(conversation == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
+            throw new MessageServiceException(Status.CONVERSATION_DOESNOT_EXIST);
         }
 
         this.conversationDAO.removeConversation(conversationId);

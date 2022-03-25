@@ -51,6 +51,11 @@
 			<version>8.0.21</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -58,8 +63,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!-- add this or there will be error -->
-				<version>2.4.1</version>
 			</plugin>
 
 			<plugin>

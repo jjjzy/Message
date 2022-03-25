@@ -6,7 +6,15 @@ public enum Status {
     USERNAME_EXISTS(2001, "Username exists."),
     WRONG_VALIDATION_CODE(2002, "Wrong validation code"),
     USER_NOT_EXISTS(2003, "User not exists."),
-    WRONG_PASSWORD(2004, "Password is wrong, try again");
+    WRONG_PASSWORD(2004, "Password is wrong, try again"),
+
+
+
+
+
+
+    CONVERSATION_DOESNOT_EXIST(4001, "The conversation doesn't exist.")
+    ;
 
     private int code;
     private String message;

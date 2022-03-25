@@ -1,4 +1,4 @@
-package com.jjjzy.messaging.Controllers;
+package com.jjjzy.messaging.controller;
 
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Response.BaseResponse;

@@ -1,4 +1,4 @@
-package com.jjjzy.messaging.Controllers;
+package com.jjjzy.messaging.controller;
 
 
 
@@ -10,11 +10,14 @@ import com.jjjzy.messaging.Request.RemoveUserFromConversationRequest;
 import com.jjjzy.messaging.Request.StartConversationRequest;
 import com.jjjzy.messaging.Request.UpdateConversationRequest;
 import com.jjjzy.messaging.Response.*;
+import com.jjjzy.messaging.annotation.NeedAuthentication;
 import com.jjjzy.messaging.service.ConversationService;
 import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/conversations")
@@ -29,11 +32,13 @@ public class ConversationController {
     private ConversationService conversationService;
 
     @PostMapping("/start")
+    @NeedAuthentication
     public StartConversationResponse startConversation(@RequestBody StartConversationRequest startConversationRequest) throws MessageServiceException {
         User user = this.userService.verifyLoginToken(startConversationRequest.getLoginToken());
         if(user == null){
             throw new MessageServiceException(Status.USER_NOT_EXISTS);
         }
+
 
         this.conversationService.startConversation(user.getId(),
                 startConversationRequest.getTitle(),
