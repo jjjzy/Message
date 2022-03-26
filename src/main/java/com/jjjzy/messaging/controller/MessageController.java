@@ -2,6 +2,7 @@ package com.jjjzy.messaging.controller;
 
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.jjjzy.messaging.Enums.Status;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.Message;
@@ -57,15 +58,17 @@ public class MessageController {
     @PostMapping("/upload")
     @NeedLoginTokenAuthentication
     public void uploadFile(User user, @RequestParam("messageId") Integer messageId, @RequestParam("file") MultipartFile file) throws MessageServiceException, IOException {
-        System.out.println(file);
+//        System.out.println(file);
 
-        File f = new File("src/main/resources/targetFile.tmp");
+//        file.getInputStream();
+//
+//        File f = new File("src/main/resources/targetFile.tmp");
+//
+//        try (OutputStream os = new FileOutputStream(f)) {
+//            os.write(file.getBytes());
+//        }
 
-        try (OutputStream os = new FileOutputStream(f)) {
-            os.write(file.getBytes());
-        }
-
-        this.amazonS3.putObject("messaging-jjjzy", "hey1", f);
+        this.amazonS3.putObject("messaging-jjjzy", "hey1", file.getInputStream(), new ObjectMetadata());
     }
 
     @GetMapping("/get")

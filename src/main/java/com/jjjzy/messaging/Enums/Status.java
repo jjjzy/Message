@@ -9,11 +9,15 @@ public enum Status {
     WRONG_PASSWORD(2004, "Password is wrong, try again"),
 
 
+    TARGET_USER_DOES_NOT_EXIST(3001, "User Id provided is invalid."),
+    FRIEND_INVITATION_DOES_NOT_EXIST(3001, "Target friend invitation doesn't exist."),
+
+
+    CONVERSATION_DOESNOT_EXIST(4001, "The conversation doesn't exist."),
 
 
 
-
-    CONVERSATION_DOESNOT_EXIST(4001, "The conversation doesn't exist.")
+    LOGINTOKEN_AUTHENTICATION_FAILED(5001, "LoginToken verification failed")
     ;
 
     private int code;

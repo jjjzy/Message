@@ -8,8 +8,10 @@ import com.jjjzy.messaging.Response.BaseResponse;
 import com.jjjzy.messaging.Response.GetFriendInvitationsResponse;
 import com.jjjzy.messaging.Response.GetFriendsResponse;
 import com.jjjzy.messaging.Response.InviteFriendResponse;
+import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
 import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.UserService;
+import jdk.jfr.Unsigned;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,39 +27,32 @@ public class FriendController {
     private FriendService friendService;
 
     @PostMapping("/invitations/invite")
-    public InviteFriendResponse inviteFriend(@RequestParam String loginToken,
-                                             @RequestParam String toUsername,
+    @NeedLoginTokenAuthentication
+    public InviteFriendResponse inviteFriend(User user,
+                                             @RequestParam int toUserId,
                                              @RequestParam String message) throws MessageServiceException{
-        User user = this.userService.verifyLoginToken(loginToken);
-        int fromUserId = user.getId();
-
-        User toUser = this.userService.verifyUsername(toUsername);
-        int toUserId = toUser.getId();
-
-        this.friendService.sendInvitation(fromUserId, toUserId, message);
+        this.friendService.sendInvitation(user.getId(), toUserId, message);
 
         return new InviteFriendResponse(Status.OK);
     }
 
     @GetMapping("/invitations")
-    public GetFriendInvitationsResponse getPendingFriendInvitations(@RequestParam String loginToken) throws MessageServiceException {
-        User user = this.userService.verifyLoginToken(loginToken);
+    @NeedLoginTokenAuthentication
+    public GetFriendInvitationsResponse getPendingFriendInvitations(User user) throws MessageServiceException {
         List<FriendInvitation> friendInvitations = this.friendService.getPendingFriendInvitations(user);
         return new GetFriendInvitationsResponse(friendInvitations);
     }
 
     @PostMapping("/invitations/accept")
-    public BaseResponse acceptFriendInvitation(@RequestParam String loginToken,
-                                               @RequestParam int invitationId) {
-        User user = this.userService.verifyLoginToken(loginToken);
+    @NeedLoginTokenAuthentication
+    public BaseResponse acceptFriendInvitation(@RequestParam int invitationId) throws MessageServiceException{
         this.friendService.acceptInvitation(invitationId);
         return new BaseResponse(Status.OK);
     }
 
     @GetMapping("/invitations/friends")
-    public GetFriendsResponse getFriends(@RequestParam String loginToken) throws MessageServiceException {
-        User user = this.userService.verifyLoginToken(loginToken);
-
+    @NeedLoginTokenAuthentication
+    public GetFriendsResponse getFriends(User user) throws MessageServiceException {
         List<User> friends = this.friendService.getFriends(user);
 
         return new GetFriendsResponse(friends);

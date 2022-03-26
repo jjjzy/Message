@@ -29,16 +29,17 @@ public class FriendService {
     private FriendDAO friendDao;
 
     public List<FriendInvitation> getPendingFriendInvitations(User user) throws MessageServiceException {
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
-        List<FriendInvitation> pendingInvitation = this.friendDao.listPendingFriendInvitations(user.getId(), FriendInvitationStatus.PENDING);
+        List<FriendInvitation> pendingInvitation = this.friendDao.getInvitationByStatus(user.getId(), FriendInvitationStatus.PENDING);
 
         return pendingInvitation;
     }
 
-    public void sendInvitation(int fromUserId, int toUserId, String message) {
+    public void sendInvitation(int fromUserId, int toUserId, String message) throws MessageServiceException{
+        if(this.userDAO.findUserByUserId(toUserId) == null){
+            throw new MessageServiceException(Status.TARGET_USER_DOES_NOT_EXIST);
+        }
+
+
         FriendInvitation friendInvitation = new FriendInvitation();
 
         friendInvitation.setSendTime(new Date());
@@ -50,35 +51,29 @@ public class FriendService {
         this.friendDao.insertInvitation(friendInvitation);
     }
 
-    public void acceptInvitation(int invitationID){
+    public void acceptInvitation(int invitationID) throws MessageServiceException{
+        if(this.friendDao.getInvitationById(invitationID) == null){
+            throw new MessageServiceException(Status.FRIEND_INVITATION_DOES_NOT_EXIST);
+        }
         this.friendDao.updateInvitationStatus(invitationID, FriendInvitationStatus.ACCEPT);
     }
 
     public List<User> getFriends(User user) throws MessageServiceException {
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
-        List<FriendInvitation> acceptedInvitation = this.friendDao.listPendingFriendInvitations(user.getId(), FriendInvitationStatus.ACCEPT);
+        List<FriendInvitation> acceptedInvitation = this.friendDao.getInvitationByStatus(user.getId(), FriendInvitationStatus.ACCEPT);
 
         List<User> friends = new ArrayList<User>();
 
         int thisUserId = user.getId();
 
         for (int i = 0; i < acceptedInvitation.size(); i++) {
-            FriendInvitation curInvitation= acceptedInvitation.get(i);
+            FriendInvitation curInvitation = acceptedInvitation.get(i);
             int from = curInvitation.getFromUserId();
-            int to = curInvitation.getToUserId();
             if(from == thisUserId){
                 friends.add(this.userDAO.findUserByUserId(curInvitation.getToUserId()));
             }
             else{
                 friends.add(this.userDAO.findUserByUserId(curInvitation.getFromUserId()));
             }
-        }
-
-        for (int i = 0; i < acceptedInvitation.size(); i++){
-            System.out.println(friends.get(i).getUsername());
         }
 
         return friends;

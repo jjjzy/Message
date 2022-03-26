@@ -42,7 +42,7 @@ public class LoginTokenAuthenticationAspect {
 
         User user = userService.verifyLoginToken(loginToken);
         if (user == null) {
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
+            throw new MessageServiceException(Status.LOGINTOKEN_AUTHENTICATION_FAILED);
         }
         try {
             var args = proceedingJoinPoint.getArgs();
