@@ -1,4 +1,4 @@
-package com.jjjzy.messaging;
+package com.jjjzy.messaging.unitTest;
 
 
 import com.jjjzy.messaging.Enums.Gender;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class UserServiceUnitTest {
     @InjectMocks
     UserService userService;
 
@@ -143,13 +143,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLogout_happycase() throws Exception {
-        User tempUser = new User();
-        tempUser.setUsername("Steph");
-        tempUser.setLoginToken("123456");
-        when(userDAO.findUserByLoginToken("123456")).thenReturn(tempUser);
+    public void testLogout_happyCase() throws Exception {
+        this.userService.userLogout(1);
+    }
 
-        this.userService.userLogout("Steph","123456");
-
+    @Test
+    public void testVerifyLoginToken(){
+        this.userService.verifyLoginToken("123");
     }
 }

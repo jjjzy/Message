@@ -1,12 +1,10 @@
-package com.jjjzy.messaging.api;
+package com.jjjzy.messaging.integrationTest;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jjjzy.messaging.Models.User;
 import com.jjjzy.messaging.dao.TestUserDAO;
 import com.jjjzy.messaging.dao.TestUserValidationCodeDAO;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

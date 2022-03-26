@@ -93,7 +93,7 @@ public class UserService {
         System.out.println(loginToken);
         System.out.println(user.getUsername());
 
-        this.userDAO.setUserLoginToken(loginToken, user.getUsername());
+        this.userDAO.setUserLoginToken(loginToken, user.getId());
     }
 
     public User verifyLoginToken(String loginToken){
@@ -101,17 +101,8 @@ public class UserService {
         return user;
     }
 
-    public User verifyUsername(String username){
-        User user = this.userDAO.findUserByUsername(username);
-        return user;
-    }
-
-    public void userLogout(String username, String loginToken) throws MessageServiceException{
-        User user = verifyLoginToken(loginToken);
-        System.out.println(user.getEmail());
-        if(user != null) {
-            this.userDAO.setUserLoginToken("NULL", user.getUsername());
-        }
+    public void userLogout(int userId) throws MessageServiceException{
+        this.userDAO.setUserLoginToken("NULL", userId);
     }
 
 

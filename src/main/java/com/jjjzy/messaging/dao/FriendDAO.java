@@ -11,8 +11,8 @@ import java.util.List;
 @Mapper
 public interface FriendDAO {
     @Select("SELECT * from friend_invitation where (from_user_id=#{userId} or to_user_id=#{userId}) and status=#{status}")
-    List<FriendInvitation> getInvitationByStatus(@Param("userId") int userId,
-                                                 @Param("status") FriendInvitationStatus status);
+    List<FriendInvitation> getInvitationByIdAndStatus(@Param("userId") int userId,
+                                                      @Param("status") FriendInvitationStatus status);
 
     @Insert("INSERT INTO `friend_invitation` (from_user_id, to_user_id, send_time, message, status) VALUES (#{fromUserId}, #{toUserId}, #{sendTime}, #{message}, #{status})")
     int insertInvitation(FriendInvitation friendInvitation);

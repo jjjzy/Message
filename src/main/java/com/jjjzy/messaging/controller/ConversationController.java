@@ -24,6 +24,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/conversations")
 public class ConversationController {
+
+    //TODO
+    //multiple same users converation check
+
     @Autowired
     private UserService userService;
 

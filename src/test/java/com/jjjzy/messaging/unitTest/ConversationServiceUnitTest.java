@@ -1,4 +1,4 @@
-package com.jjjzy.messaging;
+package com.jjjzy.messaging.unitTest;
 
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.Conversation;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ConversationServiceTest {
+public class ConversationServiceUnitTest {
     @InjectMocks
     ConversationService conversationService;
 
@@ -40,6 +40,8 @@ public class ConversationServiceTest {
     @Mock
     private ConversationUsersDAO conversationUsersDAO;
 
+    //TODO
+    //Test fails if i didnt put credential in resources in test. however user service tests work.
     @Test
     public void testStartConversation_happyCase() throws Exception{
         User tempUser = new User();

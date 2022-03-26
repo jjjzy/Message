@@ -26,7 +26,7 @@ public class FriendController {
     @Autowired
     private FriendService friendService;
 
-    @PostMapping("/invitations/invite")
+    @PostMapping("/send")
     @NeedLoginTokenAuthentication
     public InviteFriendResponse inviteFriend(User user,
                                              @RequestParam int toUserId,
@@ -36,24 +36,24 @@ public class FriendController {
         return new InviteFriendResponse(Status.OK);
     }
 
-    @GetMapping("/invitations")
+    @GetMapping("/getPending")
     @NeedLoginTokenAuthentication
     public GetFriendInvitationsResponse getPendingFriendInvitations(User user) throws MessageServiceException {
-        List<FriendInvitation> friendInvitations = this.friendService.getPendingFriendInvitations(user);
+        List<FriendInvitation> friendInvitations = this.friendService.getPendingFriendInvitations(user.getId());
         return new GetFriendInvitationsResponse(friendInvitations);
     }
 
-    @PostMapping("/invitations/accept")
+    @PostMapping("/accept")
     @NeedLoginTokenAuthentication
     public BaseResponse acceptFriendInvitation(@RequestParam int invitationId) throws MessageServiceException{
         this.friendService.acceptInvitation(invitationId);
         return new BaseResponse(Status.OK);
     }
 
-    @GetMapping("/invitations/friends")
+    @GetMapping("/getFriends")
     @NeedLoginTokenAuthentication
     public GetFriendsResponse getFriends(User user) throws MessageServiceException {
-        List<User> friends = this.friendService.getFriends(user);
+        List<User> friends = this.friendService.getFriends(user.getId());
 
         return new GetFriendsResponse(friends);
     }
