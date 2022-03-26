@@ -1,8 +1,8 @@
 package com.jjjzy.messaging.controller;
 
-
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
+//
+//import com.amazonaws.services.s3.AmazonS3;
+//import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.jjjzy.messaging.Enums.Status;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.Message;
@@ -40,8 +40,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @Autowired
-    private AmazonS3 amazonS3;
+//    @Autowired
+//    private AmazonS3 amazonS3;
 
     @PostMapping("/send")
     @NeedLoginTokenAuthentication
@@ -68,7 +68,7 @@ public class MessageController {
 //            os.write(file.getBytes());
 //        }
 
-        this.amazonS3.putObject("messaging-jjjzy", "hey1", file.getInputStream(), new ObjectMetadata());
+//        this.amazonS3.putObject("messaging-jjjzy", "hey1", file.getInputStream(), new ObjectMetadata());
     }
 
     @GetMapping("/get")

@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
