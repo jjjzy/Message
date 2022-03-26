@@ -18,7 +18,7 @@ public interface ConversationDAO {
     int createConversation(Conversation conversation);
 
     @Update("UPDATE `conversations` SET title = #{title}, notice = #{notice} WHERE id = #{conversationId}")
-    void updateConversation(@Param("conversation_id") int conversationId, @Param("title") String title, @Param("notice") String notice);
+    void updateConversation(@Param("conversationId") int conversationId, @Param("title") String title, @Param("notice") String notice);
 
     @Select("SELECT * from conversations where id = #{id}")
     Conversation getConversationById(@Param("id") int id);

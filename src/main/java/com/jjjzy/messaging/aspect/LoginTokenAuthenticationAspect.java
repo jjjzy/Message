@@ -28,21 +28,26 @@ public class LoginTokenAuthenticationAspect {
     private UserService userService;
 
 
-    @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..)) && @annotation(com.jjjzy.messaging.annotation.NeedAuthentication) && args(.., @RequestBody body)")
-    public Object authenticate(ProceedingJoinPoint proceedingJoinPoint, Object body) throws Throwable {
-        ObjectMapper mapper = new ObjectMapper();
+    @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..)) && @annotation(com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication)")
+    public Object authenticate(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+//        ObjectMapper mapper = new ObjectMapper();
+//        Map<String, Object> map = mapper.convertValue(body, new TypeReference<Map<String, Object>>() {});
+//        String loginToken = map.get("loginToken").toString();
 
-        Map<String, Object> map = mapper.convertValue(body, new TypeReference<Map<String, Object>>() {});
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String loginToken = request.getHeader("loginToken");
 
-        String loginToken = map.get("loginToken").toString();
         System.out.println(loginToken);
+
 
         User user = userService.verifyLoginToken(loginToken);
         if (user == null) {
             throw new MessageServiceException(Status.USER_NOT_EXISTS);
         }
         try {
-            return proceedingJoinPoint.proceed();
+            var args = proceedingJoinPoint.getArgs();
+            args[0] = user;
+            return proceedingJoinPoint.proceed(args);
         } finally {
         }
     }

@@ -31,7 +31,7 @@ public class MessageService {
     }
 
     public List<Message> getMessage(int fromUserId, int toUserId, int toConversationId) {
-        List<Message> messages = new ArrayList<Message>();
+        List<Message> messages = null;
         if(toConversationId < 0){
             messages = this.messageDAO.getToUserMessage(fromUserId, toUserId);
         }

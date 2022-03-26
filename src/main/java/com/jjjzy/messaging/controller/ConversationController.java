@@ -10,7 +10,7 @@ import com.jjjzy.messaging.Request.RemoveUserFromConversationRequest;
 import com.jjjzy.messaging.Request.StartConversationRequest;
 import com.jjjzy.messaging.Request.UpdateConversationRequest;
 import com.jjjzy.messaging.Response.*;
-import com.jjjzy.messaging.annotation.NeedAuthentication;
+import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
 import com.jjjzy.messaging.service.ConversationService;
 import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.UserService;
@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/conversations")
@@ -31,15 +33,26 @@ public class ConversationController {
     @Autowired
     private ConversationService conversationService;
 
+//    @PostMapping("/start")
+//    @NeedAuthentication
+//    public StartConversationResponse startConversation(@RequestBody StartConversationRequest startConversationRequest) throws MessageServiceException {
+//        User user = this.userService.verifyLoginToken(startConversationRequest.getLoginToken());
+//        if(user == null){
+//            throw new MessageServiceException(Status.USER_NOT_EXISTS);
+//        }
+//
+//
+//        this.conversationService.startConversation(user.getId(),
+//                startConversationRequest.getTitle(),
+//                startConversationRequest.getNotice(),
+//                startConversationRequest.getToUserIds());
+//
+//        return new StartConversationResponse(Status.OK);
+//    }
+
     @PostMapping("/start")
-    @NeedAuthentication
-    public StartConversationResponse startConversation(@RequestBody StartConversationRequest startConversationRequest) throws MessageServiceException {
-        User user = this.userService.verifyLoginToken(startConversationRequest.getLoginToken());
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
-
+    @NeedLoginTokenAuthentication
+    public StartConversationResponse startConversation(User user, @RequestBody StartConversationRequest startConversationRequest) throws MessageServiceException {
         this.conversationService.startConversation(user.getId(),
                 startConversationRequest.getTitle(),
                 startConversationRequest.getNotice(),
@@ -49,34 +62,22 @@ public class ConversationController {
     }
 
     @GetMapping("/get")
-    public GetAllConversationsResponse GetAllConversations(@RequestParam String loginToken) throws MessageServiceException{
-        User user = this.userService.verifyLoginToken(loginToken);
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
+    @NeedLoginTokenAuthentication
+    public GetAllConversationsResponse GetAllConversations(User user) throws MessageServiceException{
         return new GetAllConversationsResponse(Status.OK, this.conversationService.getAllConversations(user.getId()));
     }
 
     @PostMapping("/update")
-    public UpdateConversationResponse updateConversationResponse(@RequestBody UpdateConversationRequest updateConversationRequest) throws MessageServiceException {
-        User user = this.userService.verifyLoginToken(updateConversationRequest.getLoginToken());
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
+    @NeedLoginTokenAuthentication
+    public UpdateConversationResponse updateConversationResponse(User user, @RequestBody UpdateConversationRequest updateConversationRequest) throws MessageServiceException {
         this.conversationService.updateConversation(updateConversationRequest.getConversationId(), updateConversationRequest.getTitle(), updateConversationRequest.getNotice());
 
         return new UpdateConversationResponse(Status.OK);
     }
 
     @PostMapping("/invite")
-    public InviteUserToConversationResponse inviteUserToConversationResponse(@RequestBody InviteUserToConversationRequest inviteUserToConversationRequest) throws MessageServiceException{
-        User user = this.userService.verifyLoginToken(inviteUserToConversationRequest.getLoginToken());
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
+    @NeedLoginTokenAuthentication
+    public InviteUserToConversationResponse inviteUserToConversationResponse(User user, @RequestBody InviteUserToConversationRequest inviteUserToConversationRequest) throws MessageServiceException{
         this.conversationService.inviteUserToConversation(inviteUserToConversationRequest.getConversationId(),
                 inviteUserToConversationRequest.getUserIds());
 
@@ -84,12 +85,8 @@ public class ConversationController {
     }
 
     @PostMapping("/remove")
-    public RemoveUserFromConversationResponse removeUserFromConversationResponse(@RequestBody RemoveUserFromConversationRequest removeUserFromConversationRequest) throws MessageServiceException{
-        User user = this.userService.verifyLoginToken(removeUserFromConversationRequest.getLoginToken());
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
+    @NeedLoginTokenAuthentication
+    public RemoveUserFromConversationResponse removeUserFromConversationResponse(User user, @RequestBody RemoveUserFromConversationRequest removeUserFromConversationRequest) throws MessageServiceException{
         this.conversationService.removeUserFromConversation(removeUserFromConversationRequest.getConversationId(),
                 removeUserFromConversationRequest.getUserIds());
 
@@ -97,12 +94,8 @@ public class ConversationController {
     }
 
     @PostMapping("delete")
-    public DeleteConversationResponse deleteConversationResponse(@RequestParam String loginToken, @RequestParam int conversationId) throws MessageServiceException{
-        User user = this.userService.verifyLoginToken(loginToken);
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
-        }
-
+    @NeedLoginTokenAuthentication
+    public DeleteConversationResponse deleteConversationResponse(User user, @RequestParam int conversationId) throws MessageServiceException{
         this.conversationService.removeConversation(conversationId);
 
         return new DeleteConversationResponse(Status.OK);

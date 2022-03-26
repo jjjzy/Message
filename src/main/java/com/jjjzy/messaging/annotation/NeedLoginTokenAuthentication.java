@@ -1,2 +1,4 @@
-package com.jjjzy.messaging.annotation;public @interface NeedLoginTokenAuthentication {
+package com.jjjzy.messaging.annotation;
+
+public @interface NeedLoginTokenAuthentication {
 }

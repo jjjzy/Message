@@ -51,8 +51,6 @@ public class UserController {
 
     @PostMapping("/login")
     public UserLoginResponse userLogin(@RequestBody UserLoginRequest userLoginRequest) throws MessageServiceException {
-        System.out.println(userLoginRequest.getUsername());
-        System.out.println(userLoginRequest.getPassword());
         this.userService.userLogin(userLoginRequest.getUsername(),
                 userLoginRequest.getPassword());
         return new UserLoginResponse(Status.OK);
@@ -60,8 +58,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public UserLogoutResponse userLogout(@RequestBody UserLogoutRequest userLogoutRequest) throws MessageServiceException {
-        System.out.println(userLogoutRequest.getUsername());
-        System.out.println(userLogoutRequest.getLoginToken());
         this.userService.userLogout(userLogoutRequest.getUsername(),
                 userLogoutRequest.getLoginToken());
         return new UserLogoutResponse(Status.OK);
