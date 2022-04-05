@@ -9,6 +9,7 @@ import com.jjjzy.messaging.Enums.Status;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.Message;
 import com.jjjzy.messaging.dao.ConversationDAO;
+import com.jjjzy.messaging.dao.ConversationUsersDAO;
 import com.jjjzy.messaging.dao.MessageDAO;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,9 @@ public class MessageService {
 
     @Autowired
     private ConversationDAO conversationDAO;
+
+    @Autowired
+    private ConversationUsersDAO conversationUsersDAO;
 
     public void sendMessage(int fromUserId, int toUserId, int toConversationId, MessageType messageType, String content) throws MessageServiceException {
         if(toConversationId != 0 && this.conversationDAO.getConversationById(toConversationId) == null){
@@ -63,12 +68,16 @@ public class MessageService {
         }
         else{
             messages = this.messageDAO.getConversationMessages(fromUserId, toConversationId, startDate, endDate);
+            //TODO
+            //how to setup status for group chat
         }
 
         return messages;
     }
 
     public InputStream getFile(Integer messageId) throws IOException {
+        //TODO
+        //is downloading fine?
         S3Object s3Object = this.amazonS3.getObject("jjjzy-messaging-user-files", messageId.toString());
         String contentType = this.messageDAO.getMessageById(messageId).getMessageType().toString();
         String postFix = null;
@@ -88,4 +97,13 @@ public class MessageService {
     }
 
 
+    public List<Message> getLatestMessage(int userId, String lastSyncTime) {
+        List<Message> messages = this.messageDAO.getLastestMessageBySyncTime(userId, lastSyncTime);
+        for(Message i : messages){
+            if(i.getMessageStatus() == MessageStatus.UNREAD){
+                this.messageDAO.updateMessageStatusById(MessageStatus.READ, i.getId());
+            }
+        }
+        return messages;
+    }
 }

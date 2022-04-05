@@ -78,7 +78,8 @@ public class FriendService {
                 friends.add(this.userDAO.findUserByUserId(curInvitation.getFromUserId()));
             }
         }
-
+        //TODO
+        //PUT DUMMY FRIEND CLASS HERE, NOT RETURNING EVERYTHING FOR A FRIEND
         return friends;
     }
 }

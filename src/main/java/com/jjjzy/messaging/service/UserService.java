@@ -8,6 +8,8 @@ import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.User;
 import com.jjjzy.messaging.Models.UserValidationCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -24,6 +26,12 @@ public class UserService {
 
     @Autowired
     private UserValidationCodeDAO userValidationCodeDAO;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    //TODO
+    //IF not activated what to do
 
     public void registerUser(String username, String password, String email, String nickname,
                              Gender gender, String address) throws MessageServiceException {
@@ -52,6 +60,17 @@ public class UserService {
         userValidationCode.setValidationCode(validationCode);
 
         this.userValidationCodeDAO.insertUserValidationCode(userValidationCode);
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(email);
+        //TODO
+        //EMAIL VALID TIME?
+        //validation code valid time
+        msg.setSubject("Thanks for registering for messaging");
+        msg.setText("Hello \n here is your verification code \n " + validationCode + "\n you can also use this link \n" +
+                "http://localhost:8080/users/activate?username=" + username + "&validationCode=" + validationCode);
+
+        javaMailSender.send(msg);
     }
 
     private static String generateValidationCode() {

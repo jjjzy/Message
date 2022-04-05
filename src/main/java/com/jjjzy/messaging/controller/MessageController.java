@@ -67,8 +67,8 @@ public class MessageController {
 
     @GetMapping("/get")
     @NeedLoginTokenAuthentication
-    public GetMessageResponse getMessage(User user, @RequestParam(required = true, defaultValue = "0") Integer toUserId, @RequestParam(required = true, defaultValue = "0") Integer toConversationId, @RequestParam String startDate, @RequestParam String endDate) throws MessageServiceException{
-        return new GetMessageResponse(this.messageService.getMessage(user.getId(), toUserId, toConversationId, startDate, endDate));
+    public GetMessageResponse getMessage(User user, @RequestParam(defaultValue = "0") Integer toUserId, @RequestParam(defaultValue = "0") Integer toConversationId, @RequestParam String startDate, @RequestParam String endDate) throws MessageServiceException{
+        return new GetMessageResponse(this.messageService.getMessage(user.getId(), toUserId, toConversationId, startDate, endDate), Status.OK);
     }
 
     @GetMapping("/getFile")
@@ -78,4 +78,9 @@ public class MessageController {
         return new GetFileResponse(Status.OK, this.messageService.getFile(messageId));
     }
 
+    @GetMapping("/getLatest")
+    @NeedLoginTokenAuthentication
+    public GetMessageResponse getLatestMessage(User user, @RequestParam(defaultValue = "0") String lastSyncTime) throws MessageServiceException{
+        return new GetMessageResponse(this.messageService.getLatestMessage(user.getId(), lastSyncTime), Status.OK);
+    }
 }

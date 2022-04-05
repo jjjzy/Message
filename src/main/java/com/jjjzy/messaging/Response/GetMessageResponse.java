@@ -9,8 +9,8 @@ public class GetMessageResponse extends BaseResponse{
 
     List<Message> messages;
 
-    public GetMessageResponse(List<Message> message) {
-        super(Status.OK);
+    public GetMessageResponse(List<Message> message, Status status) {
+        super(status.OK);
         this.messages = message;
     }
 
@@ -18,7 +18,4 @@ public class GetMessageResponse extends BaseResponse{
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
 }

@@ -14,10 +14,7 @@ import com.jjjzy.messaging.Response.UserLogoutResponse;
 import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
 import com.jjjzy.messaging.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -46,10 +43,10 @@ public class UserController {
         return new RegisterUserResponse(Status.OK);
     }
 
-    @PostMapping("/activate")
-    public ActivateUserResponse activateUser(@RequestBody ActivateUserRequest activateUserRequest) throws MessageServiceException {
-        this.userService.activateUser(activateUserRequest.getUsername(),
-                activateUserRequest.getValidationCode());
+    @GetMapping("/activate")
+    public ActivateUserResponse activateUser(@RequestParam String username, @RequestParam String validationCode) throws MessageServiceException {
+        this.userService.activateUser(username,
+                validationCode);
         return new ActivateUserResponse(Status.OK);
     }
 
