@@ -1,14 +1,23 @@
 package com.jjjzy.messaging.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
 import com.jjjzy.messaging.Enums.MessageStatus;
 import com.jjjzy.messaging.Enums.MessageType;
+import com.jjjzy.messaging.Enums.Status;
+import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.Message;
+import com.jjjzy.messaging.dao.ConversationDAO;
 import com.jjjzy.messaging.dao.MessageDAO;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +26,17 @@ public class MessageService {
     @Autowired
     private MessageDAO messageDAO;
 
-    public void sendMessage(int fromUserId, int toUserId, int toConversationId, MessageType messageType, String content){
+    @Autowired
+    private AmazonS3 amazonS3;
+
+    @Autowired
+    private ConversationDAO conversationDAO;
+
+    public void sendMessage(int fromUserId, int toUserId, int toConversationId, MessageType messageType, String content) throws MessageServiceException {
+        if(toConversationId != 0 && this.conversationDAO.getConversationById(toConversationId) == null){
+            throw new MessageServiceException(Status.CONVERSATION_DOESNOT_EXIST);
+        }
+
         Message message = new Message();
         message.setFromUserId(fromUserId);
         message.setToUserId(toUserId);
@@ -30,15 +49,43 @@ public class MessageService {
         this.messageDAO.insertMessage(message);
     }
 
-    public List<Message> getMessage(int fromUserId, int toUserId, int toConversationId) {
+    public void sendFile(Integer messageId, MultipartFile file) throws IOException {
+        this.amazonS3.putObject("jjjzy-messaging-user-files", messageId.toString(), file.getInputStream(), new ObjectMetadata());
+    }
+
+    public List<Message> getMessage(int fromUserId, int toUserId, int toConversationId, String startDate, String endDate) {
         List<Message> messages = null;
-        if(toConversationId < 0){
-            messages = this.messageDAO.getToUserMessage(fromUserId, toUserId);
+        System.out.println(startDate);
+        System.out.println(toConversationId);
+        if(toConversationId == 0){
+            messages = this.messageDAO.getUserMessages(fromUserId, toUserId, startDate, endDate);
+            this.messageDAO.updateUserMessageStatus(MessageStatus.READ, fromUserId, toUserId);
         }
         else{
-            messages = this.messageDAO.getToConversationMessage(fromUserId, toConversationId);
+            messages = this.messageDAO.getConversationMessages(fromUserId, toConversationId, startDate, endDate);
         }
 
         return messages;
     }
+
+    public InputStream getFile(Integer messageId) throws IOException {
+        S3Object s3Object = this.amazonS3.getObject("jjjzy-messaging-user-files", messageId.toString());
+        String contentType = this.messageDAO.getMessageById(messageId).getMessageType().toString();
+        String postFix = null;
+        if(contentType.equals("IMAGE")){
+            postFix = "jpg";
+        }
+        else if(contentType.equals("VOICE")){
+            postFix = "mp3";
+        }
+        else if(contentType.equals("VIDEO")){
+            postFix = "mp4";
+        }
+        InputStream inputStream = s3Object.getObjectContent();
+        FileUtils.copyInputStreamToFile(inputStream, new File("src/main/resources/targetFile." + postFix));
+        this.messageDAO.updateMessageStatusById(MessageStatus.READ, messageId);
+        return inputStream;
+    }
+
+
 }
