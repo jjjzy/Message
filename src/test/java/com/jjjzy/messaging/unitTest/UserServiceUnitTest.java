@@ -13,10 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +32,9 @@ public class UserServiceUnitTest {
     @Mock
     private UserValidationCodeDAO userValidationCodeDAO;
 
+    @Mock
+    private JavaMailSender javaMailSender;
+
     @Test
     public void testRegister_happyCase() throws Exception {
 
@@ -37,7 +42,7 @@ public class UserServiceUnitTest {
 
         this.userService.registerUser("steph",
                 "123",
-                "fjj@gmail.com",
+                "nouseage999@gmail.com",
                 "nick",
                 Gender.MALE,
                 "address");

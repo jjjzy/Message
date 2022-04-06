@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjjzy.messaging.dao.TestUserDAO;
 import com.jjjzy.messaging.dao.TestUserValidationCodeDAO;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import static org.hamcrest.Matchers.is;
@@ -43,10 +45,16 @@ public class UserControllerIntegrationTest {
         testUserDAO.deleteAllUserValidationCode();
     }
 
+    @BeforeAll
+    public void cleanUp1(){
+        testUserDAO.deleteAllUsers();
+        testUserDAO.deleteAllUserValidationCode();
+    }
+
     @Test
     public void testRegister_happyCase() throws Exception {
 
-        String requestBody = "{\"username\": \"george2\", \"password\": \"123\", \"repeatPassword\": \"123\"}";
+        String requestBody = "{\"username\": \"george2\", \"password\": \"123\", \"repeatPassword\": \"123\", \"email\": \"nouseage999@gmail.com\"}";
 
         this.mockMvc.perform(post("/users/register")
                         .contentType("application/json")
@@ -60,12 +68,14 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void testActivate_happyCase() throws Exception{
-        String vaidationCode = this.testUserValidationCodeDAO.findUserValidationCodeByUserId(this.testUserDAO.findUserByUsername("george2").getId()).getValidationCode();
-        String requestBody = String.format("{\"username\": \"george2\", \"validationCode\": \"%s\"}", vaidationCode);
+        String validationCode = this.testUserValidationCodeDAO.findUserValidationCodeByUserId(this.testUserDAO.findUserByUsername("george2").getId()).getValidationCode();
+        System.out.println(validationCode);
+        String requestBody = String.format("{\"username\": \"george2\", \"validationCode\": \"%s\"}", validationCode);
 
-        this.mockMvc.perform(post("/users/activate")
-                .contentType("application/json")
-                .content(requestBody))
+        this.mockMvc.perform(get("/users/activate")
+                        .contentType("application/json")
+                        .param("username", "george2")
+                        .param("validationCode", validationCode))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.code", is(1000)))

@@ -69,7 +69,7 @@ public class UserService {
         msg.setSubject("Thanks for registering for messaging");
         msg.setText("Hello \n here is your verification code \n " + validationCode + "\n you can also use this link \n" +
                 "http://localhost:8080/users/activate?username=" + username + "&validationCode=" + validationCode);
-
+        System.out.println(msg);
         javaMailSender.send(msg);
     }
 
