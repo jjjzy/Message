@@ -12,6 +12,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.Random;
 
@@ -42,7 +44,6 @@ public class UserService {
         user.setUsername(username);
 
         String encryptedPassword = md5(password);
-        System.out.println(encryptedPassword);
         user.setPassword(encryptedPassword);
 
         user.setEmail(email);
@@ -51,32 +52,52 @@ public class UserService {
         user.setAddress(address);
         user.setRegistrationTime(new Date());
         int idd = this.userDAO.insertUser(user);
-        System.out.println(idd);
 
-        String validationCode = generateValidationCode();
-
-        UserValidationCode userValidationCode = new UserValidationCode();
-        userValidationCode.setUserId(user.getId());
-        userValidationCode.setValidationCode(validationCode);
+        UserValidationCode userValidationCode = createValidationCode(user.getId());
 
         this.userValidationCodeDAO.insertUserValidationCode(userValidationCode);
 
+//        SimpleMailMessage msg = new SimpleMailMessage();
+//        msg.setTo(email);
+//        //TODO
+//        //EMAIL VALID TIME?
+//        //validation code valid time
+//        msg.setSubject("Thanks for registering for messaging");
+//        msg.setText("Hello \n here is your verification code \n " + validationCode + "\n you can also use this link \n" +
+//                "http://localhost:8080/users/activate?username=" + username + "&validationCode=" + validationCode);
+//        System.out.println(msg);
+//        javaMailSender.send(msg);
+
+        sendValidationCodeEmail(email, username, userValidationCode.getValidationCode());
+    }
+
+    public UserValidationCode createValidationCode(int userId){
+        UserValidationCode userValidationCode = new UserValidationCode();
+
+        userValidationCode.setValidationCode(generateToken());
+        userValidationCode.setUserId(userId);
+        userValidationCode.setCreateTime(new Date());
+        return userValidationCode;
+    }
+
+    public void updateValidationCode(int userId){
+        String newValidationCode = generateToken();
+        this.userValidationCodeDAO.updateValidationCode(generateToken(), new Date(), userId);
+    }
+
+    public void sendValidationCodeEmail(String email, String username, String validationCode){
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
         //TODO
         //EMAIL VALID TIME?
         //validation code valid time
-        msg.setSubject("Thanks for registering for messaging");
+        msg.setSubject(username + ", thanks for registering for messaging");
         msg.setText("Hello \n here is your verification code \n " + validationCode + "\n you can also use this link \n" +
                 "http://localhost:8080/users/activate?username=" + username + "&validationCode=" + validationCode);
         System.out.println(msg);
         javaMailSender.send(msg);
     }
 
-    private static String generateValidationCode() {
-        Random random = new Random();
-        return String.format("%06d", random.nextInt(1000000));
-    }
 
     public void activateUser(String username, String validationCode) throws MessageServiceException {
         User user = this.userDAO.findUserByUsername(username);
@@ -88,31 +109,27 @@ public class UserService {
             throw new MessageServiceException(Status.WRONG_VALIDATION_CODE);
         }
 
-        System.out.println(user.getId());
-        this.userValidationCodeDAO.deleteUserValidationCode(user.getId());
+        long diffInMillies = Math.abs(new Date().getTime() - userValidationCode.getCreateTime().getTime());
+
+        if(diffInMillies >= 10 * 60 * 1000){
+            throw new MessageServiceException(Status.VALIDATION_CODE_EXPIRED);
+        }
 
         this.userDAO.setUserValid(user.getId());
+
+        this.userValidationCodeDAO.deleteUserValidationCode(user.getId());
     }
 
-    public void userLogin(String username, String password) throws MessageServiceException{
-        User user = this.userDAO.findUserByUsername(username);
-        if(user == null){
-            throw new MessageServiceException(Status.USER_NOT_EXISTS);
+    public void userLogin(User user) throws MessageServiceException{
+        if(!user.isValid()){
+            throw new MessageServiceException(Status.USER_NOT_ACTIVATED);
         }
-
-        if(!user.getPassword().equals(md5(password))){
-            throw new MessageServiceException(Status.WRONG_PASSWORD);
-        }
-
         Date loginTime = new Date();
         this.userDAO.setUserLastLoginTime(loginTime, user.getUsername());
 
         String loginToken = generateToken();
 
-        System.out.println(loginToken);
-        System.out.println(user.getUsername());
-
-        this.userDAO.setUserLoginToken(loginToken, user.getId());
+        this.userDAO.setUserLoginToken(loginToken, user.getUsername());
     }
 
     public User verifyLoginToken(String loginToken){
@@ -120,8 +137,17 @@ public class UserService {
         return user;
     }
 
-    public void userLogout(int userId) throws MessageServiceException{
-        this.userDAO.setUserLoginToken("NULL", userId);
+    public User verifyUsername(String username){
+        User user = this.userDAO.findUserByUsername(username);
+        return user;
+    }
+
+    public UserValidationCode getValidationCode(int userId){
+        return this.userValidationCodeDAO.findUserValidationCodeByUserId(userId);
+    }
+
+    public void userLogout(String username) throws MessageServiceException{
+        this.userDAO.setUserLoginToken("NULL", username);
     }
 
 

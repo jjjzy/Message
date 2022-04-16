@@ -7,7 +7,8 @@ public enum Status {
     WRONG_VALIDATION_CODE(2002, "Wrong validation code"),
     USER_NOT_EXISTS(2003, "User not exists."),
     WRONG_PASSWORD(2004, "Password is wrong, try again"),
-
+    VALIDATION_CODE_EXPIRED(2005, "Validation code is expired, please get email again."),
+    USER_NOT_ACTIVATED(2006, "You are not validated, please activate first."),
 
     TARGET_USER_DOES_NOT_EXIST(3001, "User Id provided is invalid."),
     FRIEND_INVITATION_DOES_NOT_EXIST(3001, "Target friend invitation doesn't exist."),

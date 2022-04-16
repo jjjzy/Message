@@ -1,2 +1,4 @@
-package com.jjjzy.messaging.annotation;public @interface NeedUsernamePasswordAuthentication {
+package com.jjjzy.messaging.annotation;
+
+public @interface NeedUsernamePasswordAuthentication {
 }

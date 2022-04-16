@@ -46,10 +46,6 @@ public class LoginTokenAuthenticationAspect {
         String loginToken = request.getHeader("loginToken");
 
         System.out.println(loginToken);
-        //TODO
-        //TOKEN EXPIRE DATE
-        //AOP TO CHECK TIME?
-
 
         User user = userService.verifyLoginToken(loginToken);
         if (user == null || TimeUnit.MINUTES.convert((new Date()).getTime() - user.getLastLoginTime().getTime(), TimeUnit.MILLISECONDS) > 90) {

@@ -1,9 +1,12 @@
 package com.jjjzy.messaging.Models;
 
+import java.util.Date;
+
 public class UserValidationCode {
     private int id;
     private int userId;
     private String validationCode;
+    private Date createTime;
 
     public int getId() {
         return id;
@@ -27,5 +30,13 @@ public class UserValidationCode {
 
     public void setValidationCode(String validationCode) {
         this.validationCode = validationCode;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

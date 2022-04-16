@@ -75,7 +75,7 @@ public class MessageService {
         return messages;
     }
 
-    public InputStream getFile(Integer messageId) throws IOException {
+    public byte[] getFile(Integer messageId) throws IOException {
         //TODO
         //is downloading fine?
         S3Object s3Object = this.amazonS3.getObject("jjjzy-messaging-user-files", messageId.toString());
@@ -90,10 +90,10 @@ public class MessageService {
         else if(contentType.equals("VIDEO")){
             postFix = "mp4";
         }
-        InputStream inputStream = s3Object.getObjectContent();
-        FileUtils.copyInputStreamToFile(inputStream, new File("src/main/resources/targetFile." + postFix));
         this.messageDAO.updateMessageStatusById(MessageStatus.READ, messageId);
-        return inputStream;
+
+        InputStream inputStream = s3Object.getObjectContent();
+        return inputStream.readAllBytes();
     }
 
 

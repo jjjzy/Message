@@ -71,12 +71,26 @@ public class MessageController {
         return new GetMessageResponse(this.messageService.getMessage(user.getId(), toUserId, toConversationId, startDate, endDate), Status.OK);
     }
 
-    @GetMapping("/getFile")
+    @GetMapping(value = "/getFile", produces = "image/jpeg")
+    //TODO
     @NeedLoginTokenAuthentication
-    public GetFileResponse getFile(User user, @RequestParam Integer messageId) throws IOException {
-        this.messageService.getFile(messageId);
-        return new GetFileResponse(Status.OK, this.messageService.getFile(messageId));
+    public @ResponseBody byte[] getFile(User user, @RequestParam Integer messageId) throws IOException {
+        return this.messageService.getFile(messageId);
     }
+
+//    @GetMapping("/download/{id}")
+//    public ResponseEntity<byte[]> download(@PathVariable String id) throws Exception {
+//        var doc = new Document("test.pdf", "application/pdf", "Base64 encoded data");
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-Type", doc.getType());
+//        headers.add("Content-Disposition", "attachment; filename=\"%s\"".formatted(doc.getFilename()));
+//
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .headers(headers)
+//                .body(Base64.getDecoder().decode(doc.getData()));
+//    }
 
     @GetMapping("/getLatest")
     @NeedLoginTokenAuthentication

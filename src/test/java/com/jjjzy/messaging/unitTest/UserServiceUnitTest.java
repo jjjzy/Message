@@ -121,7 +121,7 @@ public class UserServiceUnitTest {
         tempUser.setPassword(md5("1234"));
         when(userDAO.findUserByUsername("Stephkk")).thenReturn(tempUser);
 
-        this.userService.userLogin("Stephkk", "1234");
+        this.userService.userLogin(tempUser);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class UserServiceUnitTest {
 
         MessageServiceException messageServiceException = assertThrows(
                 MessageServiceException.class,
-                () -> this.userService.userLogin("steph", "123"));
+                () -> this.userService.userLogin(new User()));
         assertEquals("User not exists.", messageServiceException.getMessage());
     }
 
@@ -143,13 +143,13 @@ public class UserServiceUnitTest {
 
         MessageServiceException messageServiceException = assertThrows(
                 MessageServiceException.class,
-                () -> this.userService.userLogin("steph", "123"));
+                () -> this.userService.userLogin(tempUser));
         assertEquals("Password is wrong, try again", messageServiceException.getMessage());
     }
 
     @Test
     public void testLogout_happyCase() throws Exception {
-        this.userService.userLogout(1);
+        this.userService.userLogout("7");
     }
 
     @Test
