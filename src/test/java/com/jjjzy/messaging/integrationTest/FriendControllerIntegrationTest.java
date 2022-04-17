@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -182,5 +183,85 @@ public class FriendControllerIntegrationTest {
 //        assertEquals(array.getJSONObject(2).getString("toUserId"), 2);
 //        assertEquals(array.getJSONObject(2).getString("status"), "PENDING");
 //        assertEquals(array.getJSONObject(2).getString("message"), "hey, this is a test");
+    }
+
+    @Test
+    public void testAcceptingFriendInvitations_happyCase() throws Exception {
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+
+        String loginToken = user1.getLoginToken();
+        this.mockMvc.perform(post("/friends/send")
+                        .contentType("application/json")
+                        .header("loginToken", loginToken)
+                        .param("toUserId", Integer.toString(user2.getId()))
+                        .param("message", "hey, this is a test"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        MvcResult result = this.mockMvc.perform(get("/friends/getPending")
+                        .contentType("application/json")
+                        .header("loginToken", loginToken))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")))
+                .andExpect(jsonPath("$.invitations[0].fromUserId", is(1)))
+                .andExpect(jsonPath("$.invitations[0].toUserId", is(2)))
+                .andExpect(jsonPath("$.invitations[0].message", is("hey, this is a test")))
+                .andExpect(jsonPath("$.invitations[0].status", is("PENDING")))
+                .andReturn();
+
+        loginToken = user2.getLoginToken();
+        this.mockMvc.perform(post("/friends/accept")
+                        .contentType("application/json")
+                        .param("invitationId", Integer.toString(1))
+                        .header("loginToken", loginToken))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+    }
+
+
+    @Test
+    public void testGetFriends_happyCase() throws Exception {
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+
+        String loginToken = user1.getLoginToken();
+        this.mockMvc.perform(post("/friends/send")
+                        .contentType("application/json")
+                        .header("loginToken", loginToken)
+                        .param("toUserId", Integer.toString(user2.getId()))
+                        .param("message", "hey, this is a test"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        loginToken = user2.getLoginToken();
+        this.mockMvc.perform(post("/friends/accept")
+                        .contentType("application/json")
+                        .param("invitationId", Integer.toString(1))
+                        .header("loginToken", loginToken))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        loginToken = user1.getLoginToken();
+        this.mockMvc.perform(get("/friends/getFriends")
+                        .contentType("application/json")
+                        .header("loginToken", loginToken))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")))
+                .andExpect(jsonPath("$.friends[0].username", is("george2")))
+                .andExpect(jsonPath("$.friends[0].password", is(md5("123"))))
+                .andExpect(jsonPath("$.friends[0].email", is("nouseage999@gmail.com")));
     }
 }

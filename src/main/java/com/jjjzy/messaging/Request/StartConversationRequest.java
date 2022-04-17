@@ -6,7 +6,7 @@ public class StartConversationRequest {
     String title;
     String notice;
     List<Integer> toUserIds;
-    String loginToken;
+
 
     public String getTitle() {
         return title;
@@ -30,13 +30,5 @@ public class StartConversationRequest {
 
     public void setToUserIds(List<Integer> toUserIds) {
         this.toUserIds = toUserIds;
-    }
-
-    public String getLoginToken() {
-        return loginToken;
-    }
-
-    public void setLoginToken(String loginToken) {
-        this.loginToken = loginToken;
     }
 }

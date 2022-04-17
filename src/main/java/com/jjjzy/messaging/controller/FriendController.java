@@ -45,7 +45,7 @@ public class FriendController {
 
     @PostMapping("/accept")
     @NeedLoginTokenAuthentication
-    public BaseResponse acceptFriendInvitation(@RequestParam int invitationId) throws MessageServiceException{
+    public BaseResponse acceptFriendInvitation(User user, @RequestParam int invitationId) throws MessageServiceException{
         this.friendService.acceptInvitation(invitationId);
         return new BaseResponse(Status.OK);
     }

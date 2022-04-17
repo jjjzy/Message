@@ -28,7 +28,6 @@ CREATE TABLE user_validation_code (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
-
 CREATE TABLE `friend_invitation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from_user_id` int(11) NOT NULL,
@@ -38,3 +37,18 @@ CREATE TABLE `friend_invitation` (
   `status` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `conversation_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `conversation_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `conversations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `notice` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
