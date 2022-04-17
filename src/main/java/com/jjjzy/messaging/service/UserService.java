@@ -129,6 +129,6 @@ public class UserService {
     }
 
     public void userLogout(String username) throws MessageServiceException{
-        this.userDAO.setUserLoginToken("NULL", username);
+        this.userDAO.setUserLoginToken(null, username);
     }
 }

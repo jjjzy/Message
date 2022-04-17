@@ -2,6 +2,7 @@ package com.jjjzy.messaging.integrationTest;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jjjzy.messaging.Models.User;
 import com.jjjzy.messaging.dao.TestUserDAO;
 import com.jjjzy.messaging.dao.TestUserValidationCodeDAO;
 import org.junit.jupiter.api.*;
@@ -12,6 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.hamcrest.Matchers.is;
@@ -54,6 +58,12 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.code", is(1000)))
                 .andExpect(jsonPath("$.message", is("Successful")));
+
+        User user = this.testUserDAO.findUserByUsername("george2");
+        assertEquals(user.getPassword(), md5("123"));
+        assertEquals(user.getEmail(), "nouseage999@gmail.com");
+        assertEquals(user.getAddress(), null);
+        assertEquals(user.getId(), 1);
     }
 
     @Test
@@ -77,6 +87,10 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.code", is(1000)))
                 .andExpect(jsonPath("$.message", is("Successful")));
+
+        User user = this.testUserDAO.findUserByUsername("george");
+
+        assertEquals(user.isValid(), true);
     }
 
     @Test
@@ -109,6 +123,10 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.code", is(1000)))
                 .andExpect(jsonPath("$.message", is("Successful")));
+
+        User user = this.testUserDAO.findUserByUsername("george");
+        assert(user.getLoginToken() != null);
+        assert(user.getLastLoginTime() != null);
     }
 
     @Test
@@ -186,5 +204,8 @@ public class UserControllerIntegrationTest {
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$.code", is(1000)))
                 .andExpect(jsonPath("$.message", is("Successful")));
+
+        User user = this.testUserDAO.findUserByUsername("george");
+        assert(user.getLoginToken() == null);
     }
 }
