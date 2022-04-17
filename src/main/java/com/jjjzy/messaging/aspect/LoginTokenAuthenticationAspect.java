@@ -45,8 +45,6 @@ public class LoginTokenAuthenticationAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String loginToken = request.getHeader("loginToken");
 
-        System.out.println(loginToken);
-
         User user = userService.verifyLoginToken(loginToken);
         if (user == null || TimeUnit.MINUTES.convert((new Date()).getTime() - user.getLastLoginTime().getTime(), TimeUnit.MILLISECONDS) > 90) {
             throw new MessageServiceException(Status.LOGINTOKEN_AUTHENTICATION_FAILED);

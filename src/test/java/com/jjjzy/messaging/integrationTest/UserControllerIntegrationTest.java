@@ -110,4 +110,81 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code", is(1000)))
                 .andExpect(jsonPath("$.message", is("Successful")));
     }
+
+    @Test
+    @Order(4)
+    public void testRegister_passwordDoNotMatch_throwsMessageServiceException() throws Exception {
+        String requestBody = "{\"username\": \"george2\", \"password\": \"123\", \"repeatPassword\": \"1233\", \"email\": \"nouseage999@gmail.com\"}";
+
+        this.mockMvc.perform(post("/users/register")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(2000)))
+                .andExpect(jsonPath("$.message", is("Passwords don't match")));
+    }
+
+    @Test
+    @Order(5)
+    public void testSendEmail_happyCase() throws Exception {
+        String requestBody = "{\"username\": \"george\", \"password\": \"123\", \"repeatPassword\": \"123\", \"email\": \"nouseage999@gmail.com\"}";
+        this.mockMvc.perform(post("/users/register")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        this.mockMvc.perform(get("/users/sendEmail")
+                        .contentType("application/json")
+                .param("username", "george")
+                .param("password", "123"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+    }
+
+    @Test
+    @Order(6)
+    public void testLogout_happyCase() throws Exception {
+        String requestBody = "{\"username\": \"george\", \"password\": \"123\", \"repeatPassword\": \"123\", \"email\": \"nouseage999@gmail.com\"}";
+        this.mockMvc.perform(post("/users/register")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        String validationCode = this.testUserValidationCodeDAO.findUserValidationCodeByUserId(this.testUserDAO.findUserByUsername("george").getId()).getValidationCode();
+        this.mockMvc.perform(get("/users/activate")
+                        .contentType("application/json")
+                        .param("username", "george")
+                        .param("validationCode", validationCode))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        this.mockMvc.perform(post("/users/login")
+                        .contentType("application/json")
+                        .param("username", "george")
+                        .param("password", "123"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        String loginToken = this.testUserDAO.findUserByUsername("george").getLoginToken();
+        this.mockMvc.perform(post("/users/logout")
+                        .contentType("application/json")
+                        .header("loginToken", loginToken))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+    }
 }
