@@ -1,4 +1,4 @@
-create database messaging_test
+create database messaging_test;
 use messaging_test;
 
 CREATE TABLE users (
