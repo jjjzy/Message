@@ -1,6 +1,10 @@
-create database messaging_test;
-use messaging_test;
+CREATE USER 'messaging_u'@'%' IDENTIFIED BY 'messaging_password_2022';
 
+GRANT ALL PRIVILEGES ON *.* TO messaging@'%';
+
+CREATE DATABASE `messaging_test`;
+
+USE `messaging_test`;
 CREATE TABLE users (
   id int(11) NOT NULL AUTO_INCREMENT,
   username varchar(128) CHARACTER SET utf8 DEFAULT NULL,

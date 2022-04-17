@@ -22,7 +22,7 @@ jobs:
           mysql-version: '5.7'
 
     - name: starting sql
-      run: sudo mysql -h127.0.0.1 < messaging.sql
+      run: mysql -uroot -h127.0.0.1 < messaging.sql
 
     - name: Cache Maven packages
       uses: actions/cache@v2
