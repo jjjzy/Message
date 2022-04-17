@@ -66,9 +66,8 @@ public class UserService {
         return userValidationCode;
     }
 
-    public void updateValidationCode(int userId){
-        String newValidationCode = generateToken();
-        this.userValidationCodeDAO.updateValidationCode(generateToken(), new Date(), userId);
+    public void updateValidationCode(int userId, String validationCode, Date createTime){
+        this.userValidationCodeDAO.updateValidationCode(validationCode, createTime, userId);
     }
 
     public void sendValidationCodeEmail(String email, String username, String validationCode){
@@ -94,7 +93,7 @@ public class UserService {
 
         long diffInMillies = Math.abs(new Date().getTime() - userValidationCode.getCreateTime().getTime());
 
-        if(diffInMillies >= 10 * 60 * 1000){
+        if(diffInMillies >= 3 * 60 * 1000){
             throw new MessageServiceException(Status.VALIDATION_CODE_EXPIRED);
         }
 
@@ -104,8 +103,6 @@ public class UserService {
     }
 
     public void userLogin(User user) throws MessageServiceException{
-        System.out.println("------------------------------------------");
-        System.out.println(user.isValid());
         if(user.isValid() == false){
             throw new MessageServiceException(Status.USER_NOT_ACTIVATED);
         }

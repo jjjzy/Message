@@ -15,6 +15,9 @@ import com.jjjzy.messaging.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
+import static com.jjjzy.messaging.Utils.LoginTokenUtils.generateToken;
 import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
 
 @RestController
@@ -49,7 +52,7 @@ public class UserController {
     @GetMapping("/sendEmail")
     @NeedUsernamePasswordAuthentication
     public BaseResponse sendValidationCodeEmail(User user){
-        this.userService.updateValidationCode(user.getId());
+        this.userService.updateValidationCode(user.getId(), generateToken(), new Date());
         this.userService.sendValidationCodeEmail(user.getEmail(), user.getUsername(), this.userService.getValidationCode(user.getId()).getValidationCode());
         return new BaseResponse(Status.OK);
     }

@@ -15,8 +15,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+import static com.jjjzy.messaging.Utils.LoginTokenUtils.generateToken;
 import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -105,16 +109,35 @@ public class UserServiceUnitTest {
 
         when(userValidationCodeDAO.findUserValidationCodeByUserId(123)).thenReturn(tempCode);
 
-//
-//        when(userDAO.findUserByUsername("Stephkk")).thenReturn(tempUser);
-//
-//
-//        when(userDAO.findUserByUsername("steph")).thenReturn(null);
-
         MessageServiceException messageServiceException = assertThrows(
                 MessageServiceException.class,
                 () -> this.userService.activateUser("steph", "123"));
         assertEquals("Wrong validation code", messageServiceException.getMessage());
+    }
+
+    @Test
+    public void testActivate_waitedTooLong_throwsMessageServiceException() throws Exception{
+        User tempUser = new User();
+        tempUser.setUsername("steph");
+        tempUser.setPassword(md5("1234"));
+        tempUser.setId(123);
+        when(userDAO.findUserByUsername("steph")).thenReturn(tempUser);
+
+
+        UserValidationCode tempCode = new UserValidationCode();
+        tempCode.setUserId(123);
+        tempCode.setValidationCode("123456");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.ENGLISH);
+        String dateInString = "22-01-2015 10:15:55 AM";
+        Date date = formatter.parse(dateInString);
+        tempCode.setCreateTime(date);
+
+        when(userValidationCodeDAO.findUserValidationCodeByUserId(123)).thenReturn(tempCode);
+
+        MessageServiceException messageServiceException = assertThrows(
+                MessageServiceException.class,
+                () -> this.userService.activateUser("steph", "123456"));
+        assertEquals("Validation code is expired, please get email again.", messageServiceException.getMessage());
     }
 
     @Test
@@ -123,7 +146,6 @@ public class UserServiceUnitTest {
         tempUser.setUsername("Stephkk");
         tempUser.setPassword(md5("1234"));
         tempUser.setValid(true);
-//        when(userDAO.findUserByUsername("Stephkk")).thenReturn(tempUser);
 
         this.userService.userLogin(tempUser);
     }
@@ -144,5 +166,15 @@ public class UserServiceUnitTest {
     @Test
     public void testVerifyLoginToken(){
         this.userService.verifyLoginToken("123");
+    }
+
+    @Test
+    public void testUpdateValidationCode() throws Exception {
+        this.userService.updateValidationCode(123, generateToken(), new Date());
+    }
+
+    @Test
+    public void testGetValidationCode(){
+        this.userService.getValidationCode(123);
     }
 }

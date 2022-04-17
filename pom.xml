@@ -92,6 +92,16 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.6</version>
+
+				<configuration>
+					<excludes>
+						<exclude>com/jjjzy/messaging/Request/*.class</exclude>
+						<exclude>com/jjjzy/messaging/Response/*.class</exclude>
+						<exclude>com/jjjzy/messaging/Models/*.class</exclude>
+					</excludes>
+				</configuration>
+
+
 				<executions>
 					<execution>
 						<id>pre-unit-test</id>
