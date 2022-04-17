@@ -16,6 +16,14 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
+    - name: Set up MySQL 5.7
+      uses: shogo82148/actions-setup-mysql@v1
+      with:
+          mysql-version: '5.7'
+
+    - name: starting sql
+      run: mysql -uroot -h127.0.0.1 < messaging.sql
+
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
