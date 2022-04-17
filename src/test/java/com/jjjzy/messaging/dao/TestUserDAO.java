@@ -9,10 +9,10 @@ import java.util.Date;
 @Repository
 @Mapper
 public interface TestUserDAO {
-    @Delete("DELETE from users")
+    @Delete("truncate table users;")
     void deleteAllUsers();
 
-    @Delete("DELETE from user_validation_code")
+    @Delete("truncate table user_validation_code;")
     void deleteAllUserValidationCode();
 
     @Insert(value = "INSERT INTO `users` (username, password, email, nickname, gender, address, register_time, login_token, last_login_time)" +

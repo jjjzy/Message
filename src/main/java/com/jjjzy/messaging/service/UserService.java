@@ -32,9 +32,6 @@ public class UserService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    //TODO
-    //IF not activated what to do
-
     public void registerUser(String username, String password, String email, String nickname,
                              Gender gender, String address) throws MessageServiceException {
         if (this.userDAO.findUserByUsername(username) != null) {
@@ -57,17 +54,6 @@ public class UserService {
 
         this.userValidationCodeDAO.insertUserValidationCode(userValidationCode);
 
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//        msg.setTo(email);
-//        //TODO
-//        //EMAIL VALID TIME?
-//        //validation code valid time
-//        msg.setSubject("Thanks for registering for messaging");
-//        msg.setText("Hello \n here is your verification code \n " + validationCode + "\n you can also use this link \n" +
-//                "http://localhost:8080/users/activate?username=" + username + "&validationCode=" + validationCode);
-//        System.out.println(msg);
-//        javaMailSender.send(msg);
-
         sendValidationCodeEmail(email, username, userValidationCode.getValidationCode());
     }
 
@@ -88,13 +74,10 @@ public class UserService {
     public void sendValidationCodeEmail(String email, String username, String validationCode){
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
-        //TODO
-        //EMAIL VALID TIME?
-        //validation code valid time
         msg.setSubject(username + ", thanks for registering for messaging");
         msg.setText("Hello \n here is your verification code \n " + validationCode + "\n you can also use this link \n" +
                 "http://localhost:8080/users/activate?username=" + username + "&validationCode=" + validationCode);
-        System.out.println(msg);
+
         javaMailSender.send(msg);
     }
 
@@ -121,7 +104,9 @@ public class UserService {
     }
 
     public void userLogin(User user) throws MessageServiceException{
-        if(!user.isValid()){
+        System.out.println("------------------------------------------");
+        System.out.println(user.isValid());
+        if(user.isValid() == false){
             throw new MessageServiceException(Status.USER_NOT_ACTIVATED);
         }
         Date loginTime = new Date();
@@ -149,6 +134,4 @@ public class UserService {
     public void userLogout(String username) throws MessageServiceException{
         this.userDAO.setUserLoginToken("NULL", username);
     }
-
-
 }

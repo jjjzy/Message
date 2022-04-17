@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.Date;
+
 import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -71,9 +73,10 @@ public class UserServiceUnitTest {
         when(userDAO.findUserByUsername("steph")).thenReturn(tempUser);
 
 
-        UserValidationCode tempUserVali = new UserValidationCode();
-        tempUserVali.setValidationCode("123456");
-        when(userValidationCodeDAO.findUserValidationCodeByUserId(9)).thenReturn(tempUserVali);
+        UserValidationCode tempUserValidationCode = new UserValidationCode();
+        tempUserValidationCode.setCreateTime(new Date());
+        tempUserValidationCode.setValidationCode("123456");
+        when(userValidationCodeDAO.findUserValidationCodeByUserId(9)).thenReturn(tempUserValidationCode);
 
         this.userService.activateUser("steph", "123456");
     }
@@ -119,32 +122,18 @@ public class UserServiceUnitTest {
         User tempUser = new User();
         tempUser.setUsername("Stephkk");
         tempUser.setPassword(md5("1234"));
-        when(userDAO.findUserByUsername("Stephkk")).thenReturn(tempUser);
+        tempUser.setValid(true);
+//        when(userDAO.findUserByUsername("Stephkk")).thenReturn(tempUser);
 
         this.userService.userLogin(tempUser);
     }
 
     @Test
-    public void testLogin_userDoesNotExist_throwsMessageServiceException() throws Exception {
-        when(userDAO.findUserByUsername("steph")).thenReturn(null);
-
+    public void testLogin_notActivated_throwsMessageServiceException() throws Exception {
         MessageServiceException messageServiceException = assertThrows(
                 MessageServiceException.class,
                 () -> this.userService.userLogin(new User()));
-        assertEquals("User not exists.", messageServiceException.getMessage());
-    }
-
-    @Test
-    public void testLogin_wrongPassword_throwsMessageServiceException() throws Exception {
-        User tempUser = new User();
-        tempUser.setUsername("Steph");
-        tempUser.setPassword(md5("1234"));
-        when(userDAO.findUserByUsername("steph")).thenReturn(tempUser);
-
-        MessageServiceException messageServiceException = assertThrows(
-                MessageServiceException.class,
-                () -> this.userService.userLogin(tempUser));
-        assertEquals("Password is wrong, try again", messageServiceException.getMessage());
+        assertEquals("You are not validated, please activate first.", messageServiceException.getMessage());
     }
 
     @Test

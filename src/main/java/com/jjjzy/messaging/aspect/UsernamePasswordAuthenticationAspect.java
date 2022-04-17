@@ -30,10 +30,8 @@ public class UsernamePasswordAuthenticationAspect {
     public Object authenticate(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
-
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
 
         User user = userService.verifyUsername(username);
         if(user == null){

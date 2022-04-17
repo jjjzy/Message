@@ -25,8 +25,6 @@ public class UserController {
 
     @PostMapping("/register")
     public RegisterUserResponse register(@RequestBody RegisterUserRequest registerUserRequest) throws MessageServiceException {
-        //TODO
-        //maybe add aop to check login
         if (!registerUserRequest.getPassword().equals(registerUserRequest.getRepeatPassword())) {
             throw new MessageServiceException(
                     Status.PASSWORDS_NOT_MATCH);
