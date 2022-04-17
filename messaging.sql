@@ -1,6 +1,6 @@
 CREATE USER 'messaging_u'@'%' IDENTIFIED BY 'messaging_password_2022';
 
-GRANT ALL PRIVILEGES ON *.* TO messaging@'%';
+GRANT ALL PRIVILEGES ON *.* TO messaging_u@'%';
 
 CREATE DATABASE `messaging_test`;
 
