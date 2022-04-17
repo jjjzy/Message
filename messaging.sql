@@ -1,5 +1,5 @@
 create database messaging_test
-use messaging_test
+use messaging_test;
 
 CREATE TABLE users (
   id int(11) NOT NULL AUTO_INCREMENT,
