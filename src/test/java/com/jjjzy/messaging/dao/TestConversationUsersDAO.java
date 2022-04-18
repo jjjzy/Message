@@ -29,4 +29,5 @@ public interface TestConversationUsersDAO {
 
     @Select("SELECT user_id from conversation_users where conversation_id = #{id}")
     List<Integer> getConversationUsers(@Param("id") int id);
+
 }

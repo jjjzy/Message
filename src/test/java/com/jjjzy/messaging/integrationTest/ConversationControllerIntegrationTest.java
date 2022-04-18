@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.cert.CertificateParsingException;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
@@ -175,5 +176,183 @@ public class ConversationControllerIntegrationTest {
         temp.add(2);
         temp.add(3);
         assertTrue(conversationUsers.size() == temp.size() && conversationUsers.containsAll(temp) && temp.containsAll(conversationUsers));
+    }
+
+    @Test
+    public void testGetConversations_happyCase() throws Exception {
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+        User user3 = this.testUserDAO.findUserByUsername("george3");
+
+        String requestBody = "{\"title\": \"our test conversation\", \"notice\": \"temp notice\", \"toUserIds\": [2,3]}";
+        this.mockMvc.perform(post("/conversations/start")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        requestBody = "{\"title\": \"our test conversation1\", \"notice\": \"temp notice1\", \"toUserIds\": [2]}";
+        this.mockMvc.perform(post("/conversations/start")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        this.mockMvc.perform(get("/conversations/get")
+                        .contentType("application/json")
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")))
+                .andExpect(jsonPath("$.conversations[0].title", is("our test conversation")))
+                .andExpect(jsonPath("$.conversations[0].notice", is("temp notice")))
+                .andExpect(jsonPath("$.conversations[1].title", is("our test conversation1")))
+                .andExpect(jsonPath("$.conversations[1].notice", is("temp notice1")));
+
+
+        this.mockMvc.perform(get("/conversations/get")
+                        .contentType("application/json")
+                        .header("loginToken", user3.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")))
+                .andExpect(jsonPath("$.conversations[0].title", is("our test conversation")))
+                .andExpect(jsonPath("$.conversations[0].notice", is("temp notice")));
+    }
+
+    @Test
+    public void testUpdateConversation_happyCase() throws Exception{
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+        User user3 = this.testUserDAO.findUserByUsername("george3");
+
+        String requestBody = "{\"title\": \"our test conversation\", \"notice\": \"temp notice\", \"toUserIds\": [2,3]}";
+        this.mockMvc.perform(post("/conversations/start")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        requestBody = "{\"title\": \"modified title\", \"notice\": \"modified notice\", \"conversationId\": 1}";
+        this.mockMvc.perform(post("/conversations/update")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user2.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        Conversation conversation = this.testConversationDAO.getConversationById(1);
+        assertEquals(conversation.getTitle(), "modified title");
+        assertEquals(conversation.getNotice(), "modified notice");
+    }
+
+    @Test
+    public void testInviteUserToConversation_happyCase() throws Exception{
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+        User user3 = this.testUserDAO.findUserByUsername("george3");
+
+        String requestBody = "{\"title\": \"our test conversation\", \"notice\": \"temp notice\", \"toUserIds\": [2]}";
+        this.mockMvc.perform(post("/conversations/start")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        requestBody = "{\"conversationId\": \"1\", \"userIds\": [3]}";
+        this.mockMvc.perform(post("/conversations/invite")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user2.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        List<Integer> conversationUsers = this.testConversationUsersDAO.getConversationUsers(1);
+        List<Integer> temp = new ArrayList<Integer>();
+        temp.add(1);
+        temp.add(2);
+        temp.add(3);
+        assertTrue(conversationUsers.size() == temp.size() && conversationUsers.containsAll(temp) && temp.containsAll(conversationUsers));
+    }
+
+
+    @Test
+    public void testRemoveUserToConversation_happyCase() throws Exception{
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+        User user3 = this.testUserDAO.findUserByUsername("george3");
+
+        String requestBody = "{\"title\": \"our test conversation\", \"notice\": \"temp notice\", \"toUserIds\": [2,3]}";
+        this.mockMvc.perform(post("/conversations/start")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        requestBody = "{\"conversationId\": \"1\", \"userIds\": [3]}";
+        this.mockMvc.perform(post("/conversations/remove")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user2.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        List<Integer> conversationUsers = this.testConversationUsersDAO.getConversationUsers(1);
+        List<Integer> temp = new ArrayList<Integer>();
+        temp.add(1);
+        temp.add(2);
+        assertTrue(conversationUsers.size() == temp.size() && conversationUsers.containsAll(temp) && temp.containsAll(conversationUsers));
+    }
+
+    @Test
+    public void testDeleteConversation_happyCase() throws Exception{
+        User user1 = this.testUserDAO.findUserByUsername("george1");
+        User user2 = this.testUserDAO.findUserByUsername("george2");
+        User user3 = this.testUserDAO.findUserByUsername("george3");
+
+        String requestBody = "{\"title\": \"our test conversation\", \"notice\": \"temp notice\", \"toUserIds\": [2,3]}";
+        this.mockMvc.perform(post("/conversations/start")
+                        .contentType("application/json")
+                        .content(requestBody)
+                        .header("loginToken", user1.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        this.mockMvc.perform(post("/conversations/delete")
+                        .contentType("application/json")
+                        .param("conversationId", Integer.toString(1))
+                        .header("loginToken", user3.getLoginToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"))
+                .andExpect(jsonPath("$.code", is(1000)))
+                .andExpect(jsonPath("$.message", is("Successful")));
+
+        assertEquals(this.testConversationDAO.getConversationById(1), null);
+        assertEquals(this.testConversationUsersDAO.getConversationUsers(1), new ArrayList<Integer>());
     }
 }
