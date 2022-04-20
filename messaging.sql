@@ -52,3 +52,15 @@ CREATE TABLE `conversations` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from_user_id` int(11) NOT NULL,
+  `to_user_id` int(11) DEFAULT NULL,
+  `to_conversation_id` int(11) DEFAULT NULL,
+  `message_type` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `content` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `send_time` datetime DEFAULT NULL,
+  `message_status` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

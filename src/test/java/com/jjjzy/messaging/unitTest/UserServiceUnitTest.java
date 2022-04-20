@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.jjjzy.messaging.Utils.LoginTokenUtils.generateToken;
-import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
+import static com.jjjzy.messaging.Utils.utils.generateToken;
+import static com.jjjzy.messaging.Utils.utils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;

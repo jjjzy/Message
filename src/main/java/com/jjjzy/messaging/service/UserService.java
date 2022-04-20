@@ -17,9 +17,8 @@ import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.Random;
 
-import static com.jjjzy.messaging.Utils.LoginTokenUtils.generateToken;
-import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
-
+import static com.jjjzy.messaging.Utils.utils.generateToken;
+import static com.jjjzy.messaging.Utils.utils.md5;
 
 @Service
 public class UserService {

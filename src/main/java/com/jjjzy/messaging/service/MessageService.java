@@ -11,15 +11,13 @@ import com.jjjzy.messaging.Models.Message;
 import com.jjjzy.messaging.dao.ConversationDAO;
 import com.jjjzy.messaging.dao.ConversationUsersDAO;
 import com.jjjzy.messaging.dao.MessageDAO;
-import org.apache.commons.io.FileUtils;
+import com.jjjzy.messaging.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,11 +33,22 @@ public class MessageService {
     private ConversationDAO conversationDAO;
 
     @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
     private ConversationUsersDAO conversationUsersDAO;
 
     public void sendMessage(int fromUserId, int toUserId, int toConversationId, MessageType messageType, String content) throws MessageServiceException {
         if(toConversationId != 0 && this.conversationDAO.getConversationById(toConversationId) == null){
-            throw new MessageServiceException(Status.CONVERSATION_DOESNOT_EXIST);
+            throw new MessageServiceException(Status.CONVERSATION_DOES_NOT_EXIST);
+        }
+
+        if(toUserId != 0 && this.userDAO.findUserByUserId(toUserId) == null){
+            throw new MessageServiceException(Status.TARGET_USER_DOES_NOT_EXIST);
+        }
+
+        if(toUserId > 0 && toConversationId > 0){
+            throw new MessageServiceException(Status.CAN_ONLY_SEND_TO_USER_OR_CONVERSATION);
         }
 
         Message message = new Message();

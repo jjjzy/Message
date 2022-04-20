@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
+import static com.jjjzy.messaging.Utils.utils.md5;
 
 @Aspect
 @Component

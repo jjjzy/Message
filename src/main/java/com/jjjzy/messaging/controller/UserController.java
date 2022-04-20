@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
-import static com.jjjzy.messaging.Utils.LoginTokenUtils.generateToken;
-import static com.jjjzy.messaging.Utils.PasswordUtils.md5;
+import static com.jjjzy.messaging.Utils.utils.generateToken;
+
 
 @RestController
 @RequestMapping("/users")

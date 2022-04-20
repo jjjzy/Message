@@ -1,7 +1,5 @@
 package com.jjjzy.messaging.aspect;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjjzy.messaging.Enums.Status;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.User;
@@ -17,12 +15,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 
 @Aspect
@@ -47,7 +41,7 @@ public class LoginTokenAuthenticationAspect {
 
         User user = userService.verifyLoginToken(loginToken);
         if (user == null || TimeUnit.MINUTES.convert((new Date()).getTime() - user.getLastLoginTime().getTime(), TimeUnit.MILLISECONDS) > 90) {
-            throw new MessageServiceException(Status.LOGINTOKEN_AUTHENTICATION_FAILED);
+            throw new MessageServiceException(Status.LOGIN_TOKEN_AUTHENTICATION_FAILED);
         }
         try {
             var args = proceedingJoinPoint.getArgs();

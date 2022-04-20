@@ -14,11 +14,12 @@ public enum Status {
     FRIEND_INVITATION_DOES_NOT_EXIST(3001, "Target friend invitation doesn't exist."),
 
 
-    CONVERSATION_DOESNOT_EXIST(4001, "The conversation doesn't exist."),
+    CONVERSATION_DOES_NOT_EXIST(4001, "The conversation doesn't exist."),
+
+    CAN_ONLY_SEND_TO_USER_OR_CONVERSATION(5001, "Please send message to either user or conversation"),
 
 
-
-    LOGINTOKEN_AUTHENTICATION_FAILED(5001, "LoginToken verification failed")
+    LOGIN_TOKEN_AUTHENTICATION_FAILED(6001, "LoginToken verification failed")
     ;
 
     private int code;
