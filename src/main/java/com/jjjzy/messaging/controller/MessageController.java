@@ -19,13 +19,18 @@ import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.MessageService;
 import com.jjjzy.messaging.service.UserService;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/message")
@@ -44,6 +49,8 @@ public class MessageController {
 
 //    @Autowired
 //    private AmazonS3 amazonS3;
+
+    private Logger log = LoggerFactory.getLogger(MessageController.class);
 
     @PostMapping("/send")
     @NeedLoginTokenAuthentication
@@ -94,7 +101,29 @@ public class MessageController {
 
     @GetMapping("/getLatest")
     @NeedLoginTokenAuthentication
-    public GetMessageResponse getLatestMessage(User user, @RequestParam(defaultValue = "0") String lastSyncTime) throws MessageServiceException{
-        return new GetMessageResponse(this.messageService.getLatestMessage(user.getId(), lastSyncTime), Status.OK);
+    public DeferredResult<GetMessageResponse> getLatestMessage(User user, @RequestParam(defaultValue = "0") String lastSyncTime) throws MessageServiceException{
+
+        long timeOutInMilliSec = 10000L;
+        DeferredResult<GetMessageResponse> deferredResult =
+                new DeferredResult<>(timeOutInMilliSec, () -> new GetMessageResponse(List.of(), Status.GET_MESSAGE_TIMEOUT));
+        CompletableFuture.runAsync(() -> {
+            try {
+                while (true) {
+                    var messages = this.messageService.getLatestMessage(user.getId(), lastSyncTime);
+
+                    if (!messages.isEmpty()) {
+                        deferredResult.setResult(new GetMessageResponse(messages, Status.OK));
+                        break;
+                    } else {
+                        Thread.sleep(1000);
+                    }
+                }
+
+            } catch (Exception exception) {
+                log.warn("Failed to get latest messages: {}", exception.getMessage(), exception);
+                deferredResult.setErrorResult(new MessageServiceException(Status.MESSAGE_ERROR));
+            }
+        });
+        return deferredResult;
     }
 }

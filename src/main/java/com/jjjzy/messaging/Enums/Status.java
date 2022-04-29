@@ -17,8 +17,8 @@ public enum Status {
     CONVERSATION_DOES_NOT_EXIST(4001, "The conversation doesn't exist."),
 
     CAN_ONLY_SEND_TO_USER_OR_CONVERSATION(5001, "Please send message to either user or conversation"),
-
-
+    MESSAGE_ERROR(5002, "Error getting message."),
+    GET_MESSAGE_TIMEOUT(5003, "Getting message time out."),
     LOGIN_TOKEN_AUTHENTICATION_FAILED(6001, "LoginToken verification failed")
     ;
 

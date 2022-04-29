@@ -10,7 +10,7 @@ public class GetMessageResponse extends BaseResponse{
     List<Message> messages;
 
     public GetMessageResponse(List<Message> message, Status status) {
-        super(status.OK);
+        super(status);
         this.messages = message;
     }
 
