@@ -19,7 +19,8 @@ public enum Status {
     CAN_ONLY_SEND_TO_USER_OR_CONVERSATION(5001, "Please send message to either user or conversation"),
     MESSAGE_ERROR(5002, "Error getting message."),
     GET_MESSAGE_TIMEOUT(5003, "Getting message time out."),
-    LOGIN_TOKEN_AUTHENTICATION_FAILED(6001, "LoginToken verification failed")
+    LOGIN_TOKEN_AUTHENTICATION_FAILED(6001, "LoginToken verification failed"),
+    TOO_MANY_REQUEST(7001, "You can't do this for this many times")
     ;
 
     private int code;

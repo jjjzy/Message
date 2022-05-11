@@ -17,6 +17,22 @@
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+<!--	<repositories>-->
+<!--		<repository>-->
+<!--			<id>spring-boot-throttling-repo</id>-->
+<!--			<url>https://raw.github.com/weddini/spring-boot-throttling/mvn-repo/</url>-->
+<!--			<snapshots>-->
+<!--				<enabled>true</enabled>-->
+<!--				<updatePolicy>always</updatePolicy>-->
+<!--			</snapshots>-->
+<!--		</repository>-->
+<!--	</repositories>-->
+
+
+
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -77,6 +93,31 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+<!--		throttling-->
+<!--		<dependency>-->
+<!--			<groupId>com.github.vladimir-bukhtoyarov</groupId>-->
+<!--			<artifactId>bucket4j-core</artifactId>-->
+<!--			<version>4.10.0</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.weddini.throttling</groupId>-->
+<!--			<artifactId>spring-boot-throttling-starter</artifactId>-->
+<!--			<version>0.0.9</version>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>31.0.1-jre</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.vladimir-bukhtoyarov</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>4.10.0</version>
 		</dependency>
 
 	</dependencies>

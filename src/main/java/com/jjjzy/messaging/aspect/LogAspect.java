@@ -8,6 +8,7 @@ import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
 import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.util.concurrent.RateLimiter;
 import com.jjjzy.messaging.Request.StartConversationRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -37,18 +38,23 @@ public class LogAspect {
     @Autowired
     private AmazonCloudWatch amazonCloudWatch;
 
+//    RateLimiter rateLimiter = RateLimiter.create(0.1);
+
     @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..))")
     public Object log(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 
         long startTime = System.currentTimeMillis();
         boolean isSuccessful = true;
+
         System.out.println("start");
+
         try {
             return proceedingJoinPoint.proceed();
         } catch (Exception exception) {
             isSuccessful = false;
             throw exception;
         } finally {
+//            rateLimiter.acquire();
             double elapsedMs = System.currentTimeMillis() - startTime;
             logger.info("Executed {}.{}, elapsed: {} ms, isSuccessful: {}. ",
                     proceedingJoinPoint.getTarget().getClass().getName(),

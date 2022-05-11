@@ -1,24 +1,26 @@
 package com.jjjzy.messaging.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
+import com.google.common.util.concurrent.RateLimiter;
 import com.jjjzy.messaging.Enums.Status;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.Request.ActivateUserRequest;
 import com.jjjzy.messaging.Request.RegisterUserRequest;
-import com.jjjzy.messaging.Request.UserLoginRequest;
-import com.jjjzy.messaging.Request.UserLogoutRequest;
 import com.jjjzy.messaging.Response.*;
 import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
 import com.jjjzy.messaging.annotation.NeedUsernamePasswordAuthentication;
 import com.jjjzy.messaging.service.UserService;
+
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Bucket4j;
+import io.github.bucket4j.Refill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.Date;
 
 import static com.jjjzy.messaging.Utils.utils.generateToken;
-
 
 @RestController
 @RequestMapping("/users")
@@ -26,21 +28,28 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    Bucket bucket = Bucket4j.builder()
+            .addLimit(Bandwidth.classic(1, Refill.intervally(1, Duration.ofMinutes(1))))
+            .build();
+
     @PostMapping("/register")
     public RegisterUserResponse register(@RequestBody RegisterUserRequest registerUserRequest) throws MessageServiceException {
-        if (!registerUserRequest.getPassword().equals(registerUserRequest.getRepeatPassword())) {
-            throw new MessageServiceException(
-                    Status.PASSWORDS_NOT_MATCH);
+        if (bucket.tryConsume(1)) {
+            if (!registerUserRequest.getPassword().equals(registerUserRequest.getRepeatPassword())) {
+                throw new MessageServiceException(
+                        Status.PASSWORDS_NOT_MATCH);
+            }
+
+            this.userService.registerUser(registerUserRequest.getUsername(),
+                    registerUserRequest.getPassword(),
+                    registerUserRequest.getEmail(),
+                    registerUserRequest.getNickname(),
+                    registerUserRequest.getGender(),
+                    registerUserRequest.getAddress());
+
+            return new RegisterUserResponse(Status.OK);
         }
-
-        this.userService.registerUser(registerUserRequest.getUsername(),
-                registerUserRequest.getPassword(),
-                registerUserRequest.getEmail(),
-                registerUserRequest.getNickname(),
-                registerUserRequest.getGender(),
-                registerUserRequest.getAddress());
-
-        return new RegisterUserResponse(Status.OK);
+        return new RegisterUserResponse(Status.TOO_MANY_REQUEST);
     }
 
     @GetMapping("/activate")
