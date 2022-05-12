@@ -29,7 +29,7 @@ public class UserController {
     private UserService userService;
 
     Bucket bucket = Bucket4j.builder()
-            .addLimit(Bandwidth.classic(1, Refill.intervally(1, Duration.ofMinutes(1))))
+            .addLimit(Bandwidth.classic(200, Refill.intervally(200, Duration.ofMinutes(1))))
             .build();
 
     @PostMapping("/register")
