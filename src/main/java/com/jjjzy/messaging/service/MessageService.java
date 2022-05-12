@@ -115,4 +115,21 @@ public class MessageService {
         }
         return messages;
     }
+
+    public List<Message> getAllMessage(int userId){
+        List<Message> messages = this.messageDAO.getAllMessage(userId);
+        return messages;
+    }
+
+    public List<Message> getAllUnreadMessage(int userId, String status){
+        List<Message> messages = this.messageDAO.getAllUnreadMessage(userId, "UNREAD");
+
+        for(Message i : messages){
+            if(i.getMessageStatus() == MessageStatus.UNREAD){
+                this.messageDAO.updateMessageStatusById(MessageStatus.READ, i.getId());
+            }
+        }
+
+        return messages;
+    }
 }

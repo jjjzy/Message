@@ -37,4 +37,9 @@ public interface MessageDAO {
 
 //    @Update("UPDATE messages SET message_status = #{status} WHERE (from_user_id=#{fromUserId} and to_user_id=#{toUserId}) or (from_user_id=#{toUserId} and to_user_id=#{fromUserId})")
 //    void updateMessageStatusToConversation(@Param("fromUserId") int fromUserId, @Param("toUserId") int toUserId);
+    @Select("SELECT * from messages where (from_user_id = #{userId} or to_user_id = #{userId})")
+    List<Message> getAllMessage(@Param("userId") int userId);
+
+    @Select("SELECT * from messages where (from_user_id = #{userId} or to_user_id = #{userId}) and message_status = #{status}")
+    List<Message> getAllUnreadMessage(@Param("userId") int userId, @Param("status") String status);
 }

@@ -126,4 +126,9 @@ public class MessageController {
         });
         return deferredResult;
     }
+
+//    @RequestMapping("/websocket")
+//    public String getWebSocket() {
+//        return "jjjjj";
+//    }
 }
