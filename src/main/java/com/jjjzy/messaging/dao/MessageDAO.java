@@ -40,6 +40,6 @@ public interface MessageDAO {
     @Select("SELECT * from messages where (from_user_id = #{userId} or to_user_id = #{userId})")
     List<Message> getAllMessage(@Param("userId") int userId);
 
-    @Select("SELECT * from messages where (from_user_id = #{userId} or to_user_id = #{userId}) and message_status = #{status}")
+    @Select("SELECT * from messages where (to_user_id = #{userId}) and message_status = #{status}")
     List<Message> getAllUnreadMessage(@Param("userId") int userId, @Param("status") String status);
 }

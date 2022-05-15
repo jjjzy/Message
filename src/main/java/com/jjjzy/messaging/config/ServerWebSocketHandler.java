@@ -43,7 +43,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
         sessions.remove(session);
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 3000)
     void sendPeriodicMessages() throws IOException {
         for (WebSocketSession session : sessions) {
             if (session.isOpen()) {
@@ -51,7 +51,12 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
 
                 User user = this.userService.verifyLoginToken(loginToken);
 
-                List<Message> recentMessage = this.messageService.getAllUnreadMessage(user.getId(), "UNREAD");
+//                if(user == null){
+//                    System.out.println("yes");
+//                    sessions.remove(session);
+//                }
+
+                List<Message> recentMessage = this.messageService.getAllUnreadMessage(user.getId());
                 for(Message message : recentMessage){
                     session.sendMessage(new TextMessage(message.getContent()));
                 }

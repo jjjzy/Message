@@ -15,9 +15,11 @@ import com.jjjzy.messaging.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +39,9 @@ public class MessageService {
 
     @Autowired
     private ConversationUsersDAO conversationUsersDAO;
+
+
+    private Jedis jedis = new Jedis("localhost", 6379);
 
     public void sendMessage(int fromUserId, int toUserId, int toConversationId, MessageType messageType, String content) throws MessageServiceException {
         if(toConversationId != 0 && this.conversationDAO.getConversationById(toConversationId) == null){
@@ -60,7 +65,23 @@ public class MessageService {
         message.setMessageStatus(MessageStatus.UNREAD);
         message.setMessageType(messageType);
 
-        this.messageDAO.insertMessage(message);
+        int messageId = this.messageDAO.insertMessage(message);
+
+        System.out.println(messageId);
+
+
+
+        if(toConversationId == 0){
+            jedis.rpush(String.valueOf(toUserId), String.valueOf(message.getId()));
+        }
+
+        if(toUserId == 0){
+            List<Integer> users = this.conversationUsersDAO.getUserIDfromByConversationId(toConversationId);
+            for(int i : users){
+                jedis.rpush(String.valueOf(i), String.valueOf(message.getId()));
+            }
+        }
+
     }
 
     public void sendFile(Integer messageId, MultipartFile file) throws IOException {
@@ -116,18 +137,38 @@ public class MessageService {
         return messages;
     }
 
-    public List<Message> getAllMessage(int userId){
-        List<Message> messages = this.messageDAO.getAllMessage(userId);
-        return messages;
-    }
+//    public List<Message> getAllMessage(int userId){
+//        List<Message> messages = this.messageDAO.getAllMessage(userId);
+//        return messages;
+//    }
 
-    public List<Message> getAllUnreadMessage(int userId, String status){
-        List<Message> messages = this.messageDAO.getAllUnreadMessage(userId, "UNREAD");
+    public List<Message> getAllUnreadMessage(int userId){
+//        List<Message> messages = this.messageDAO.getAllUnreadMessage(userId, "UNREAD");
+//
+//        for(Message i : messages){
+//            if(i.getMessageStatus() == MessageStatus.UNREAD){
+//                this.messageDAO.updateMessageStatusById(MessageStatus.READ, i.getId());
+//            }
+//        }
 
-        for(Message i : messages){
-            if(i.getMessageStatus() == MessageStatus.UNREAD){
-                this.messageDAO.updateMessageStatusById(MessageStatus.READ, i.getId());
-            }
+        List<String> inbox = jedis.lrange(String.valueOf(userId), 0, -1);
+
+        if(inbox.size() == 0){
+            return null;
+        }
+
+//        for(String i : inbox){
+//            System.out.println(i);
+//        }
+        List<Message> messages = new ArrayList<>();
+
+        for(String i : inbox){
+            int id = Integer.parseInt(i);
+            System.out.println(id);
+            Message message = this.messageDAO.getMessageById(id);
+            System.out.println(message.getContent());
+            messages.add(message);
+            jedis.lpop(String.valueOf(userId));
         }
 
         return messages;

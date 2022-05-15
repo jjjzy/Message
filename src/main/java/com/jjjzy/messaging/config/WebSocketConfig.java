@@ -1,6 +1,9 @@
 package com.jjjzy.messaging.config;
 
 
+import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -35,15 +38,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
                 // Get the URI segment corresponding to the auction id during handshake
                 String path = String.valueOf(request.getURI());
-//                System.out.println(path);
                 String loginToken = path.substring(path.lastIndexOf('=') + 1);
-
-
 
                 attributes.put("loginToken", loginToken);
 
-                // This will be added to the websocket session
-//                attributes.put("auctionId", auctionId);
                 return true;
             }
 

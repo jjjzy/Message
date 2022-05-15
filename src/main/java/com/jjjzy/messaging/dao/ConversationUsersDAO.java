@@ -18,6 +18,9 @@ public interface ConversationUsersDAO {
     @Select("SELECT conversation_id from conversation_users where user_id = #{id}")
     List<Integer> getConversationIdById(@Param("id") int id);
 
+    @Select("SELECT user_id from conversation_users where conversation_id = #{id}")
+    List<Integer> getUserIDfromByConversationId(@Param("id") int id);
+
     @Delete("DELETE FROM `conversation_users` WHERE user_id = #{userId}")
     void removeUserFromConversation(@Param("userId") int userId);
 
