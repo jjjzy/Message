@@ -13,10 +13,8 @@ import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import org.springframework.web.util.HtmlUtils;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +35,6 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.info("Server connection opened");
         sessions.add(session);
-
-//        TextMessage message = new TextMessage("one-time message from server");
-//        logger.info("Server sends: {}", message);
-//        session.sendMessage(message);
     }
 
     @Override
@@ -53,14 +47,11 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     void sendPeriodicMessages() throws IOException {
         for (WebSocketSession session : sessions) {
             if (session.isOpen()) {
-//                logger.info("Server sends: {}", broadcast);
-//                session.sendMessage(new TextMessage(broadcast));
                 String loginToken = session.getAttributes().get("loginToken").toString();
 
                 User user = this.userService.verifyLoginToken(loginToken);
 
                 List<Message> recentMessage = this.messageService.getAllUnreadMessage(user.getId(), "UNREAD");
-//                System.out.println(recentMessage);
                 for(Message message : recentMessage){
                     session.sendMessage(new TextMessage(message.getContent()));
                 }
@@ -71,38 +62,8 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
         super.handleTextMessage(session, message);
 
-//        String request = message.getPayload();
-//        logger.info("Server received: {}", request);
-//
-//        String response = String.format("response from server to '%s'", HtmlUtils.htmlEscape(request));
-//        logger.info("Server sends: {}", response);
-//        session.sendMessage(new TextMessage("hello"));
-
-//        List<Message> recentMessage = this.messageService.getAllMessage(2);
-//        System.out.println(recentMessage);
-//        System.out.println(recentMessage.get(1).getContent());
-//
-//        for(WebSocketSession curSession : sessions){
-//            curSession.sendMessage(new TextMessage("hello"));
-//        }
-
-
-
-//        sessions.forEach(webSocketSession -> {
-//            try {
-//
-//                webSocketSession.sendMessage(message);
-//
-//            } catch (IOException e) {
-//
-//                logger.error("Error occurred.", e);
-//
-//            }
-//
-//        });
     }
 
     @Override
