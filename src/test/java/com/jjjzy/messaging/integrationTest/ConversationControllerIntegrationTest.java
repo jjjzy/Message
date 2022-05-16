@@ -1,8 +1,8 @@
 package com.jjjzy.messaging.integrationTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jjjzy.messaging.Models.Conversation;
-import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.models.Conversation;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.dao.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.security.cert.CertificateParsingException;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 

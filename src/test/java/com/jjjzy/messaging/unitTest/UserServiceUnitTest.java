@@ -1,10 +1,10 @@
 package com.jjjzy.messaging.unitTest;
 
 
-import com.jjjzy.messaging.Enums.Gender;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.Models.UserValidationCode;
+import com.jjjzy.messaging.enums.Gender;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.User;
+import com.jjjzy.messaging.models.UserValidationCode;
 import com.jjjzy.messaging.dao.UserDAO;
 import com.jjjzy.messaging.dao.UserValidationCodeDAO;
 import com.jjjzy.messaging.service.UserService;
@@ -15,13 +15,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.jjjzy.messaging.Utils.utils.generateToken;
-import static com.jjjzy.messaging.Utils.utils.md5;
+import static com.jjjzy.messaging.utils.utils.generateToken;
+import static com.jjjzy.messaging.utils.utils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;

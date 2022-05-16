@@ -1,8 +1,8 @@
 package com.jjjzy.messaging.aspect;
 
-import com.jjjzy.messaging.Enums.Status;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.enums.Status;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -14,10 +14,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
-import static com.jjjzy.messaging.Utils.utils.md5;
+import static com.jjjzy.messaging.utils.utils.md5;
 
 @Aspect
 @Component

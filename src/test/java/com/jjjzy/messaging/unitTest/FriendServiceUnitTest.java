@@ -1,11 +1,9 @@
 package com.jjjzy.messaging.unitTest;
 
-import com.jjjzy.messaging.Enums.FriendInvitationStatus;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.FriendInvitation;
-import com.jjjzy.messaging.Models.Message;
-import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.controller.MessageServiceExceptionHandler;
+import com.jjjzy.messaging.enums.FriendInvitationStatus;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.FriendInvitation;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.dao.FriendDAO;
 import com.jjjzy.messaging.dao.UserDAO;
 import com.jjjzy.messaging.service.FriendService;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 

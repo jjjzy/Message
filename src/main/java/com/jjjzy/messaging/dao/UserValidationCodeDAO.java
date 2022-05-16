@@ -1,7 +1,6 @@
 package com.jjjzy.messaging.dao;
 
-import com.jjjzy.messaging.Enums.FriendInvitationStatus;
-import com.jjjzy.messaging.Models.UserValidationCode;
+import com.jjjzy.messaging.models.UserValidationCode;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

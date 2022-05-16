@@ -1,13 +1,12 @@
 package com.jjjzy.messaging.integrationTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jjjzy.messaging.Enums.FriendInvitationStatus;
-import com.jjjzy.messaging.Models.FriendInvitation;
-import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.enums.FriendInvitationStatus;
+import com.jjjzy.messaging.models.FriendInvitation;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.dao.TestFriendDAO;
 import com.jjjzy.messaging.dao.TestUserDAO;
 import com.jjjzy.messaging.dao.TestUserValidationCodeDAO;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static com.jjjzy.messaging.Utils.utils.md5;
+import static com.jjjzy.messaging.utils.utils.md5;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

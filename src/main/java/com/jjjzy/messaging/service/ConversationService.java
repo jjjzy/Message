@@ -1,9 +1,9 @@
 package com.jjjzy.messaging.service;
 
-import com.jjjzy.messaging.Enums.Status;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.Conversation;
-import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.enums.Status;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.Conversation;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.dao.ConversationDAO;
 import com.jjjzy.messaging.dao.ConversationUsersDAO;
 import com.jjjzy.messaging.dao.UserDAO;

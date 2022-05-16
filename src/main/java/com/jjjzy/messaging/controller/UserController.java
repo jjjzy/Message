@@ -1,13 +1,12 @@
 package com.jjjzy.messaging.controller;
 
-import com.google.common.util.concurrent.RateLimiter;
-import com.jjjzy.messaging.Enums.Status;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.Request.RegisterUserRequest;
-import com.jjjzy.messaging.Response.*;
-import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
-import com.jjjzy.messaging.annotation.NeedUsernamePasswordAuthentication;
+import com.jjjzy.messaging.enums.Status;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.User;
+import com.jjjzy.messaging.requests.RegisterUserRequest;
+import com.jjjzy.messaging.responses.*;
+import com.jjjzy.messaging.annotations.NeedLoginTokenAuthentication;
+import com.jjjzy.messaging.annotations.NeedUsernamePasswordAuthentication;
 import com.jjjzy.messaging.service.UserService;
 
 import io.github.bucket4j.Bandwidth;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.Date;
 
-import static com.jjjzy.messaging.Utils.utils.generateToken;
+import static com.jjjzy.messaging.utils.utils.generateToken;
 
 @RestController
 @RequestMapping("/users")

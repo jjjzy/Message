@@ -1,6 +1,6 @@
 package com.jjjzy.messaging.dao;
 
-import com.jjjzy.messaging.Models.Conversation;
+import com.jjjzy.messaging.models.Conversation;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

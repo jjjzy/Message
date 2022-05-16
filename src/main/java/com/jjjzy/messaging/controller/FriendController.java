@@ -1,17 +1,16 @@
 package com.jjjzy.messaging.controller;
 
-import com.jjjzy.messaging.Enums.Status;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.FriendInvitation;
-import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.Response.BaseResponse;
-import com.jjjzy.messaging.Response.GetFriendInvitationsResponse;
-import com.jjjzy.messaging.Response.GetFriendsResponse;
-import com.jjjzy.messaging.Response.InviteFriendResponse;
-import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
+import com.jjjzy.messaging.enums.Status;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.FriendInvitation;
+import com.jjjzy.messaging.models.User;
+import com.jjjzy.messaging.responses.BaseResponse;
+import com.jjjzy.messaging.responses.GetFriendInvitationsResponse;
+import com.jjjzy.messaging.responses.GetFriendsResponse;
+import com.jjjzy.messaging.responses.InviteFriendResponse;
+import com.jjjzy.messaging.annotations.NeedLoginTokenAuthentication;
 import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.UserService;
-import jdk.jfr.Unsigned;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

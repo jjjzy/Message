@@ -1,7 +1,7 @@
 package com.jjjzy.messaging.controller;
 
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Response.BaseResponse;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.responses.BaseResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;

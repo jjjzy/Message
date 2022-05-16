@@ -1,7 +1,7 @@
 package com.jjjzy.messaging.dao;
 
-import com.jjjzy.messaging.Enums.FriendInvitationStatus;
-import com.jjjzy.messaging.Models.FriendInvitation;
+import com.jjjzy.messaging.enums.FriendInvitationStatus;
+import com.jjjzy.messaging.models.FriendInvitation;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

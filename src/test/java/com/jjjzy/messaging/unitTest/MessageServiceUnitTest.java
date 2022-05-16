@@ -1,11 +1,10 @@
 package com.jjjzy.messaging.unitTest;
 
-import com.jjjzy.messaging.Enums.MessageType;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.Conversation;
-import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.enums.MessageType;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.Conversation;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.dao.*;
-import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.MessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;

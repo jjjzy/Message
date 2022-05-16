@@ -1,7 +1,7 @@
 package com.jjjzy.messaging.dao;
 
-import com.jjjzy.messaging.Enums.MessageStatus;
-import com.jjjzy.messaging.Models.Message;
+import com.jjjzy.messaging.enums.MessageStatus;
+import com.jjjzy.messaging.models.Message;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

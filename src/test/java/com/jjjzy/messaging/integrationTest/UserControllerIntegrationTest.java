@@ -2,7 +2,7 @@ package com.jjjzy.messaging.integrationTest;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jjjzy.messaging.Models.User;
+import com.jjjzy.messaging.models.User;
 import com.jjjzy.messaging.dao.TestUserDAO;
 import com.jjjzy.messaging.dao.TestUserValidationCodeDAO;
 import org.junit.jupiter.api.*;
@@ -14,7 +14,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.jjjzy.messaging.Utils.utils.md5;
+import static com.jjjzy.messaging.utils.utils.md5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

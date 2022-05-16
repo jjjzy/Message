@@ -2,23 +2,20 @@ package com.jjjzy.messaging.service;
 
 import com.jjjzy.messaging.dao.UserDAO;
 import com.jjjzy.messaging.dao.UserValidationCodeDAO;
-import com.jjjzy.messaging.Enums.Gender;
-import com.jjjzy.messaging.Enums.Status;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.Models.UserValidationCode;
+import com.jjjzy.messaging.enums.Gender;
+import com.jjjzy.messaging.enums.Status;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.User;
+import com.jjjzy.messaging.models.UserValidationCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.Date;
-import java.util.Random;
 
-import static com.jjjzy.messaging.Utils.utils.generateToken;
-import static com.jjjzy.messaging.Utils.utils.md5;
+import static com.jjjzy.messaging.utils.utils.generateToken;
+import static com.jjjzy.messaging.utils.utils.md5;
 
 @Service
 public class UserService {

@@ -2,24 +2,20 @@ package com.jjjzy.messaging.controller;
 
 
 
-import com.jjjzy.messaging.Enums.Status;
-import com.jjjzy.messaging.Exceptions.MessageServiceException;
-import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.Request.InviteUserToConversationRequest;
-import com.jjjzy.messaging.Request.RemoveUserFromConversationRequest;
-import com.jjjzy.messaging.Request.StartConversationRequest;
-import com.jjjzy.messaging.Request.UpdateConversationRequest;
-import com.jjjzy.messaging.Response.*;
-import com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication;
+import com.jjjzy.messaging.enums.Status;
+import com.jjjzy.messaging.exceptions.MessageServiceException;
+import com.jjjzy.messaging.models.User;
+import com.jjjzy.messaging.requests.InviteUserToConversationRequest;
+import com.jjjzy.messaging.requests.RemoveUserFromConversationRequest;
+import com.jjjzy.messaging.requests.StartConversationRequest;
+import com.jjjzy.messaging.requests.UpdateConversationRequest;
+import com.jjjzy.messaging.responses.*;
+import com.jjjzy.messaging.annotations.NeedLoginTokenAuthentication;
 import com.jjjzy.messaging.service.ConversationService;
 import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/conversations")
