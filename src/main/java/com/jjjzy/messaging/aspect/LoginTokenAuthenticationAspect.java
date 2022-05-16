@@ -30,7 +30,7 @@ public class LoginTokenAuthenticationAspect {
     private UserDAO userDAO;
 
 
-    @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..)) && @annotation(com.jjjzy.messaging.annotation.NeedLoginTokenAuthentication)")
+    @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..)) && @annotation(com.jjjzy.messaging.annotations.NeedLoginTokenAuthentication)")
     public Object authenticate(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 //        ObjectMapper mapper = new ObjectMapper();
 //        Map<String, Object> map = mapper.convertValue(body, new TypeReference<Map<String, Object>>() {});

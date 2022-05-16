@@ -158,9 +158,9 @@
 
 				<configuration>
 					<excludes>
-						<exclude>com/jjjzy/messaging/Request/*.class</exclude>
-						<exclude>com/jjjzy/messaging/Response/*.class</exclude>
-						<exclude>com/jjjzy/messaging/Models/*.class</exclude>
+						<exclude>com/jjjzy/messaging/requests/*.class</exclude>
+						<exclude>com/jjjzy/messaging/responses/*.class</exclude>
+						<exclude>com/jjjzy/messaging/models/*.class</exclude>
 					</excludes>
 				</configuration>
 

@@ -24,7 +24,7 @@ public class UsernamePasswordAuthenticationAspect {
     @Autowired
     private UserService userService;
 
-    @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..)) && @annotation(com.jjjzy.messaging.annotation.NeedUsernamePasswordAuthentication)")
+    @Around("execution(* com.jjjzy.messaging.controller.*Controller.*(..)) && @annotation(com.jjjzy.messaging.annotations.NeedUsernamePasswordAuthentication)")
     public Object authenticate(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
