@@ -4,10 +4,7 @@ import com.jjjzy.messaging.Enums.MessageType;
 import com.jjjzy.messaging.Exceptions.MessageServiceException;
 import com.jjjzy.messaging.Models.Conversation;
 import com.jjjzy.messaging.Models.User;
-import com.jjjzy.messaging.dao.ConversationDAO;
-import com.jjjzy.messaging.dao.FriendDAO;
-import com.jjjzy.messaging.dao.MessageDAO;
-import com.jjjzy.messaging.dao.UserDAO;
+import com.jjjzy.messaging.dao.*;
 import com.jjjzy.messaging.service.FriendService;
 import com.jjjzy.messaging.service.MessageService;
 import org.junit.jupiter.api.Test;
@@ -19,6 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,10 +44,16 @@ public class MessageServiceUnitTest {
     @Mock
     private ConversationDAO conversationDAO;
 
+    @Mock
+    private ConversationUsersDAO conversationUsersDAO;
+
     @Test
     public void testSendMessage_happyCase() throws MessageServiceException {
         when(this.conversationDAO.getConversationById(1)).thenReturn(new Conversation());
-
+        List<Integer> ids = new ArrayList<>();
+        ids.add(1);
+        ids.add(2);
+        when(this.conversationUsersDAO.getUserIDfromByConversationId(1)).thenReturn(ids);
         this.messageService.sendMessage(1, 0, 1, MessageType.TEXT, "test content");
     }
 
